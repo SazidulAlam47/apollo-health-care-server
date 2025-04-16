@@ -1,11 +1,12 @@
-import { Server } from "http";
-import app from "./app";
+/* eslint-disable no-console */
+import { Server } from 'http';
+import app from './app';
 
 const port = 5000;
 
 async function main() {
     const server: Server = app.listen(port, () => {
-        console.log("Apollo Health Care Server is listening on port", port);
+        console.log('Apollo Health Care Server is listening on port', port);
     });
 }
 
