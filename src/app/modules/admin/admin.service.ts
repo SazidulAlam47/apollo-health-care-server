@@ -1,9 +1,14 @@
 import { Prisma } from '../../../../generated/prisma';
+import calculateOptions, { TOptions } from '../../../utils/calculateOptions';
 import prisma from '../../shared/prisma';
-import { adminSearchableFields } from './admin.constants';
+import { adminSearchableFields } from './admin.constant';
 
-const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
-    const { searchTerm, ...filterData } = query;
+const getAllAdminsFromDB = async (
+    params: Record<string, unknown>,
+    options: TOptions,
+) => {
+    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(options);
+    const { searchTerm, ...filterData } = params;
     const andConditions: Prisma.AdminWhereInput[] = [];
 
     if (searchTerm) {
@@ -32,8 +37,16 @@ const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
 
     const result = await prisma.admin.findMany({
         where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
     });
-    return result;
+
+    const meta = { page, limit };
+
+    return { result, meta };
 };
 
 export const AdminServices = {
