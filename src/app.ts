@@ -1,17 +1,30 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import { UserRoutes } from './app/modules/user/user.route';
+import router from './app/routes';
+import notFound from './app/middlewares/notFound';
 
 const app: Application = express();
 
+// parsers
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(cookieParser());
+// app.use(cors({ origin: [config.client_url as string], credentials: true }));
 
-app.use('/api/v1/users', UserRoutes);
+// application routes
+app.use('/api/v1', router);
 
-app.get('/', (req, res) => {
-    res.send({ message: 'Hello from Apollo Health Care!' });
-});
+const test = (req: Request, res: Response) => {
+    res.send({ message: 'Apollo Health Care Server is Running...' });
+};
+
+app.get('/', test);
+
+// global error handler
+// app.use(globalErrorHandler);
+
+// not found route
+app.use(notFound);
 
 export default app;

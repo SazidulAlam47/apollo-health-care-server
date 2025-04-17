@@ -4,3 +4,6 @@ node_modules
 #pnpm
 pnpm-lock.yaml
 pnpm-workspace.yaml
+
+#vscode
+.vscode

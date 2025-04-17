@@ -1,10 +1,9 @@
-import { PrismaClient, UserRole } from '../../../../generated/prisma';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
+import prisma from '../../shared/prisma';
+import { UserRole } from '../../../../generated/prisma';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdmin = async (payload: any) => {
+const createAdminIntoDB = async (payload: any) => {
     const hashedPassword = await bcrypt.hash(payload.password, 12);
 
     const userData = {
@@ -27,5 +26,5 @@ const createAdmin = async (payload: any) => {
 };
 
 export const UserServices = {
-    createAdmin,
+    createAdminIntoDB,
 };
