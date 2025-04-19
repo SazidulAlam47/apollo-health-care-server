@@ -1,6 +1,6 @@
-import { Admin, Prisma } from '../../../../generated/prisma';
-import calculateOptions, { TOptions } from '../../../utils/calculateOptions';
-import prisma from '../../shared/prisma';
+import { Admin, Prisma, UserStatus } from '../../../../generated/prisma';
+import calculateOptions, { TOptions } from '../../utils/calculateOptions';
+import prisma from '../../utils/prisma';
 import { adminSearchableFields } from './admin.constant';
 
 const getAllAdminsFromDB = async (
@@ -30,6 +30,10 @@ const getAllAdminsFromDB = async (
         });
     }
 
+    andConditions.push({
+        isDeleted: false,
+    });
+
     // check the condition
     // console.dir(andConditions, { depth: Infinity });
 
@@ -54,14 +58,14 @@ const getAllAdminsFromDB = async (
 
 const getAdminByIdFromDB = async (id: string) => {
     const result = await prisma.admin.findUnique({
-        where: { id },
+        where: { id, isDeleted: false },
     });
     return result;
 };
 
 const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
     await prisma.admin.findUniqueOrThrow({
-        where: { id },
+        where: { id, isDeleted: false },
     });
     const result = await prisma.admin.update({
         where: { id },
@@ -71,8 +75,21 @@ const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
 };
 
 const deleteAdminByIdFromDB = async (id: string) => {
-    const result = await prisma.admin.delete({
-        where: { id },
+    await prisma.admin.findUniqueOrThrow({
+        where: { id, isDeleted: false },
+    });
+    const result = await prisma.$transaction(async (tx) => {
+        const adminDeletedData = await tx.admin.update({
+            where: { id },
+            data: { isDeleted: true },
+        });
+
+        await tx.user.update({
+            where: { email: adminDeletedData.email },
+            data: { status: UserStatus.DELETED },
+        });
+
+        return adminDeletedData;
     });
     return result;
 };

@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import router from './app/routes';
 import notFound from './app/middlewares/notFound';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
 const app: Application = express();
 
@@ -12,17 +13,18 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(cookieParser());
 // app.use(cors({ origin: [config.client_url as string], credentials: true }));
 
-// application routes
-app.use('/api/v1', router);
-
 const test = (req: Request, res: Response) => {
     res.send({ message: 'Apollo Health Care Server is Running...' });
 };
 
+// test route
 app.get('/', test);
 
+// application routes
+app.use('/api/v1', router);
+
 // global error handler
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 // not found route
 app.use(notFound);

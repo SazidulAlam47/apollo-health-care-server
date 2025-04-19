@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import prisma from '../../shared/prisma';
+import prisma from '../../utils/prisma';
 import { Admin, UserRole } from '../../../../generated/prisma';
 
 const createAdminIntoDB = async (payload: {
