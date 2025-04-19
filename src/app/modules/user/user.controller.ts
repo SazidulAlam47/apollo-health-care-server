@@ -13,6 +13,7 @@ const createAdmin = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: err.name || 'Something went wrong',
+            error: err,
         });
     }
 };

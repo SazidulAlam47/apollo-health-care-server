@@ -1,4 +1,4 @@
-import { Prisma } from '../../../../generated/prisma';
+import { Admin, Prisma } from '../../../../generated/prisma';
 import calculateOptions, { TOptions } from '../../../utils/calculateOptions';
 import prisma from '../../shared/prisma';
 import { adminSearchableFields } from './admin.constant';
@@ -44,11 +44,42 @@ const getAllAdminsFromDB = async (
         },
     });
 
-    const meta = { page, limit };
+    const totalData = await prisma.admin.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
 
-    return { result, meta };
+    return { data: result, meta: { page, limit, totalData, totalPage } };
+};
+
+const getAdminByIdFromDB = async (id: string) => {
+    const result = await prisma.admin.findUnique({
+        where: { id },
+    });
+    return result;
+};
+
+const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
+    await prisma.admin.findUniqueOrThrow({
+        where: { id },
+    });
+    const result = await prisma.admin.update({
+        where: { id },
+        data,
+    });
+    return result;
+};
+
+const deleteAdminByIdFromDB = async (id: string) => {
+    const result = await prisma.admin.delete({
+        where: { id },
+    });
+    return result;
 };
 
 export const AdminServices = {
     getAllAdminsFromDB,
+    getAdminByIdFromDB,
+    updateAdminByIdIntoDB,
+    deleteAdminByIdFromDB,
 };
