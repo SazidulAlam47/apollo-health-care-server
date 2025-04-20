@@ -3,15 +3,15 @@ import { UserStatus } from '../../../../generated/prisma';
 import config from '../../config';
 import { comparePassword } from '../../utils/bcrypt';
 import prisma from '../../utils/prisma';
-import { createToken } from '../../utils/token';
+import { createToken, verifyToken } from '../../utils/token';
+import ApiError from '../../errors/ApiError';
+import status from 'http-status';
 
 const loginUser = async (payload: { email: string; password: string }) => {
     const user = await prisma.user.findUniqueOrThrow({
         where: {
             email: payload.email,
-            NOT: {
-                status: UserStatus.DELETED,
-            },
+            status: UserStatus.ACTIVE,
         },
     });
 
@@ -41,6 +41,38 @@ const loginUser = async (payload: { email: string; password: string }) => {
     };
 };
 
+const refreshToken = async (refreshToken: string) => {
+    const decoded = verifyToken(
+        refreshToken,
+        config.jwt.refresh_token_secret as string,
+    );
+
+    const user = await prisma.user.findUnique({
+        where: {
+            email: decoded.email,
+            status: UserStatus.ACTIVE,
+        },
+    });
+
+    if (!user) {
+        throw new ApiError(status.NOT_FOUND, 'User not found');
+    }
+
+    const jwtPayload = {
+        email: user.email,
+        role: user.role,
+    };
+
+    const accessToken = createToken(
+        jwtPayload,
+        config.jwt.access_token_secret as string,
+        config.jwt.access_token_expires_in as ms.StringValue,
+    );
+
+    return { accessToken };
+};
+
 export const AuthServices = {
     loginUser,
+    refreshToken,
 };

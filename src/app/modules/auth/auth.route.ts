@@ -13,4 +13,6 @@ router.post(
 
 router.get('/logout', AuthControllers.logoutUser);
 
+router.get('/refresh-token', AuthControllers.refreshToken);
+
 export const AuthRoutes = router;
