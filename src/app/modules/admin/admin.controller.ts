@@ -4,7 +4,7 @@ import pick from '../../utils/pick';
 import status from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
-import { queryFilters } from '../../constant';
+import { queryFilters } from '../../constants';
 
 const getAllAdmins = catchAsync(async (req, res) => {
     const filters = pick(req.query, adminFilters);

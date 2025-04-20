@@ -11,7 +11,6 @@ const getAllAdminsFromDB = async (
 ) => {
     const { page, limit, skip, sortBy, sortOrder, searchTerm } =
         calculateOptions(query);
-    // const { searchTerm, ...filterData } = params;
     const andConditions: Prisma.AdminWhereInput[] = [];
 
     if (searchTerm) {
