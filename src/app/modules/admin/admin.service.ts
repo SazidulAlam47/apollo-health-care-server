@@ -1,21 +1,24 @@
 import { Admin, Prisma, UserStatus } from '../../../../generated/prisma';
-import calculateOptions, { TOptions } from '../../utils/calculateOptions';
+import { TQueryParams } from '../../../interfaces';
+import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { adminSearchableFields } from './admin.constant';
+import { TAdminFilters } from './admin.interface';
 
 const getAllAdminsFromDB = async (
-    params: Record<string, unknown>,
-    options: TOptions,
+    filterData: TAdminFilters,
+    query: TQueryParams,
 ) => {
-    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(options);
-    const { searchTerm, ...filterData } = params;
+    const { page, limit, skip, sortBy, sortOrder, searchTerm } =
+        calculateOptions(query);
+    // const { searchTerm, ...filterData } = params;
     const andConditions: Prisma.AdminWhereInput[] = [];
 
     if (searchTerm) {
         andConditions.push({
             OR: adminSearchableFields.map((field) => ({
                 [field]: {
-                    contains: searchTerm as string,
+                    contains: searchTerm,
                     mode: 'insensitive',
                 },
             })),

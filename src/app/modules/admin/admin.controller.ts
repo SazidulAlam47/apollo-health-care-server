@@ -4,11 +4,12 @@ import pick from '../../utils/pick';
 import status from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
+import { queryFilters } from '../../constant';
 
 const getAllAdmins = catchAsync(async (req, res) => {
     const filters = pick(req.query, adminFilters);
-    const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
-    const result = await AdminServices.getAllAdminsFromDB(filters, options);
+    const query = pick(req.query, queryFilters);
+    const result = await AdminServices.getAllAdminsFromDB(filters, query);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'All Admin are fetched successfully',
