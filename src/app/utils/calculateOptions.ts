@@ -1,4 +1,4 @@
-import { TQueryParams } from '../../interfaces';
+import { TQueryParams } from '../interfaces';
 
 const calculateOptions = (options: TQueryParams) => {
     const page = Number(options.page) || 1;

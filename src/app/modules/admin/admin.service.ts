@@ -1,5 +1,7 @@
+import status from 'http-status';
 import { Admin, Prisma, UserStatus } from '../../../../generated/prisma';
-import { TQueryParams } from '../../../interfaces';
+import { TQueryParams } from '../../interfaces';
+import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { adminSearchableFields } from './admin.constant';
@@ -66,9 +68,12 @@ const getAdminByIdFromDB = async (id: string) => {
 };
 
 const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
-    await prisma.admin.findUniqueOrThrow({
+    const admin = await prisma.admin.findUnique({
         where: { id, isDeleted: false },
     });
+    if (!admin) {
+        throw new ApiError(status.NOT_FOUND, 'Admin not found');
+    }
     const result = await prisma.admin.update({
         where: { id },
         data,
@@ -77,9 +82,12 @@ const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
 };
 
 const deleteAdminByIdFromDB = async (id: string) => {
-    await prisma.admin.findUniqueOrThrow({
+    const admin = await prisma.admin.findUnique({
         where: { id, isDeleted: false },
     });
+    if (!admin) {
+        throw new ApiError(status.NOT_FOUND, 'Admin not found');
+    }
     const result = await prisma.$transaction(async (tx) => {
         const adminDeletedData = await tx.admin.update({
             where: { id },
