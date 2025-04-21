@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { TUserRole } from '../modules/user/user.interface';
 import ApiError from '../errors/ApiError';
 import status from 'http-status';
@@ -8,7 +8,6 @@ import { Secret } from 'jsonwebtoken';
 import prisma from '../utils/prisma';
 import { UserStatus } from '../../../generated/prisma';
 import { CustomRequest } from '../interfaces';
-import { TDecodedUser } from '../interfaces/jwt.interface';
 
 const auth = (...requiredRoles: TUserRole[]) => {
     return async (req: CustomRequest, res: Response, next: NextFunction) => {
