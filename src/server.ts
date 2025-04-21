@@ -3,6 +3,7 @@ import { Server } from 'http';
 import app from './app';
 import config from './app/config';
 import seedSuperAdmin from './app/DB/seedSuperAdmin';
+import './app/interfaces/index';
 
 const port = Number(config.port);
 

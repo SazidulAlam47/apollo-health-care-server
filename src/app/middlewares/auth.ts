@@ -4,12 +4,14 @@ import ApiError from '../errors/ApiError';
 import status from 'http-status';
 import { verifyToken } from '../utils/token';
 import config from '../config';
-import { JwtPayload, Secret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 import prisma from '../utils/prisma';
 import { UserStatus } from '../../../generated/prisma';
+import { CustomRequest } from '../interfaces';
+import { TDecodedUser } from '../interfaces/jwt.interface';
 
 const auth = (...requiredRoles: TUserRole[]) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: CustomRequest, res: Response, next: NextFunction) => {
         const tokenBearer = req.headers.authorization;
         if (!tokenBearer) {
             throw new ApiError(status.UNAUTHORIZED, 'You are not authorized');
@@ -35,7 +37,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         if (requiredRoles.length && !requiredRoles.includes(role)) {
             throw new ApiError(status.FORBIDDEN, 'Forbidden access');
         }
-        req.user = decoded as JwtPayload;
+        req.user = decoded;
         next();
     };
 };

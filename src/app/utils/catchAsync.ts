@@ -1,7 +1,8 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { CustomRequest, CustomRequestHandler } from '../interfaces';
 
-const catchAsync = (fn: RequestHandler) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+const catchAsync = (fn: CustomRequestHandler) => {
+    return async (req: CustomRequest, res: Response, next: NextFunction) => {
         try {
             await fn(req, res, next);
         } catch (error) {

@@ -1,1 +1,2 @@
 export * from './queryParams.interface';
+export * from './express.interface';
