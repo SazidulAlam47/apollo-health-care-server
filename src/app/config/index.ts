@@ -29,4 +29,5 @@ export default {
         sslPaymentApi: process.env.SSL_PAYMENT_API,
         sslValidationApi: process.env.SSL_VALIDATION_API,
     },
+    super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
 };

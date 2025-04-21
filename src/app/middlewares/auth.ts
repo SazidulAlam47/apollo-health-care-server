@@ -4,7 +4,7 @@ import ApiError from '../errors/ApiError';
 import status from 'http-status';
 import { verifyToken } from '../utils/token';
 import config from '../config';
-import { Secret } from 'jsonwebtoken';
+import { JwtPayload, Secret } from 'jsonwebtoken';
 import prisma from '../utils/prisma';
 import { UserStatus } from '../../../generated/prisma';
 
@@ -35,7 +35,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         if (requiredRoles.length && !requiredRoles.includes(role)) {
             throw new ApiError(status.FORBIDDEN, 'Forbidden access');
         }
-        req.user = decoded;
+        req.user = decoded as JwtPayload;
         next();
     };
 };
