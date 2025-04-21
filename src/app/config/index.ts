@@ -16,9 +16,12 @@ export default {
         reset_pass_token_expires_in: process.env.RESET_PASS_TOKEN_EXPIRES_IN,
     },
     client_url: process.env.CLIENT_URL,
-    emailSender: {
-        email: process.env.EMAIL,
-        app_pass: process.env.APP_PASS,
+    node_mailer: {
+        host: process.env.NODE_MAILER_HOST,
+        port: process.env.NODE_MAILER_PORT,
+        email: process.env.NODE_MAILER_EMAIL,
+        user: process.env.NODE_MAILER_USER,
+        password: process.env.NODE_MAILER_PASSWORD,
     },
     ssl: {
         storeId: process.env.STORE_ID,

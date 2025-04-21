@@ -3,6 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import catchAsync from '../../utils/catchAsync';
 import config from '../../config';
+import { CustomRequest } from '../../interfaces';
 
 const loginUser = catchAsync(async (req, res) => {
     const result = await AuthServices.loginUser(req.body);
@@ -45,10 +46,31 @@ const refreshToken = catchAsync(async (req, res) => {
 });
 
 const changePassword = catchAsync(async (req, res) => {
-    const result = await AuthServices.changePassword(req.user, req.body);
+    const user = (req as CustomRequest).user;
+    const result = await AuthServices.changePassword(user, req.body);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Password changed successfully',
+        data: result,
+    });
+});
+
+const forgotPassword = catchAsync(async (req, res) => {
+    const { email } = req.body;
+    const result = await AuthServices.forgotPassword(email);
+    sendResponse(res, {
+        statusCode: status.OK,
+        message: 'Password Reset Email send successfully',
+        data: result,
+    });
+});
+
+const resetPassword = catchAsync(async (req, res) => {
+    const token = req.headers.authorization || '';
+    const result = await AuthServices.resetPassword(token, req.body);
+    sendResponse(res, {
+        statusCode: status.OK,
+        message: 'Password Reset successfully',
         data: result,
     });
 });
@@ -58,4 +80,6 @@ export const AuthControllers = {
     logoutUser,
     refreshToken,
     changePassword,
+    forgotPassword,
+    resetPassword,
 };

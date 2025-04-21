@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { TUserRole } from '../modules/user/user.interface';
 import ApiError from '../errors/ApiError';
 import status from 'http-status';
@@ -10,7 +10,7 @@ import { UserStatus } from '../../../generated/prisma';
 import { CustomRequest } from '../interfaces';
 
 const auth = (...requiredRoles: TUserRole[]) => {
-    return async (req: CustomRequest, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
         const tokenBearer = req.headers.authorization;
         if (!tokenBearer) {
             throw new ApiError(status.UNAUTHORIZED, 'You are not authorized');
@@ -36,7 +36,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         if (requiredRoles.length && !requiredRoles.includes(role)) {
             throw new ApiError(status.FORBIDDEN, 'Forbidden access');
         }
-        req.user = decoded;
+        (req as CustomRequest).user = decoded;
         next();
     };
 };
