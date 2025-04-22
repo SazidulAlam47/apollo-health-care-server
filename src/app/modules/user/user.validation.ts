@@ -6,7 +6,6 @@ const createAdminValidationSchema = z.object({
         name: z.string(),
         email: z.string().email(),
         contactNumber: z.string(),
-        profilePhoto: z.string().optional(),
     }),
 });
 

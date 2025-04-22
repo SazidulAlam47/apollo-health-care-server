@@ -4,7 +4,7 @@ import status from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 
 const createAdmin = catchAsync(async (req, res) => {
-    const result = await UserServices.createAdminIntoDB(req.body);
+    const result = await UserServices.createAdminIntoDB(req.body, req.file);
     sendResponse(res, {
         statusCode: status.CREATED,
         message: 'Admin created Successfully',
