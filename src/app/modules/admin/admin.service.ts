@@ -5,11 +5,10 @@ import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { adminSearchableFields } from './admin.constant';
-import { TAdminFilters } from './admin.interface';
 import buildSearchFilterConditions from '../../utils/buildConditions';
 
 const getAllAdminsFromDB = async (
-    filterData: TAdminFilters,
+    filterData: Partial<Admin>,
     query: TQueryParams,
 ) => {
     const { page, limit, skip, sortBy, sortOrder, searchTerm } =

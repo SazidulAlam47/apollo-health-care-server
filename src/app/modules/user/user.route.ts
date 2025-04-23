@@ -1,5 +1,5 @@
 import express from 'express';
-import { UserController } from './user.controller';
+import { UserControllers } from './user.controller';
 import auth from '../../middlewares/auth';
 import { UserValidations } from './user.validation';
 import { upload } from '../../utils/sendImageToCloudinary';
@@ -7,12 +7,14 @@ import validateRequestWithFileCleanup from '../../middlewares/validateRequestWit
 
 const router = express.Router();
 
+router.get('/', auth('ADMIN', 'SUPER_ADMIN'), UserControllers.getAllUsers);
+
 router.post(
     '/create-admin',
     auth('ADMIN', 'SUPER_ADMIN'),
     upload.single('file'),
     validateRequestWithFileCleanup(UserValidations.createAdminValidationSchema),
-    UserController.createAdmin,
+    UserControllers.createAdmin,
 );
 
 router.post(
@@ -22,7 +24,7 @@ router.post(
     validateRequestWithFileCleanup(
         UserValidations.createDoctorValidationSchema,
     ),
-    UserController.createDoctor,
+    UserControllers.createDoctor,
 );
 
 router.post(
@@ -31,7 +33,7 @@ router.post(
     validateRequestWithFileCleanup(
         UserValidations.createPatientValidationSchema,
     ),
-    UserController.createPatient,
+    UserControllers.createPatient,
 );
 
 export const UserRoutes = router;

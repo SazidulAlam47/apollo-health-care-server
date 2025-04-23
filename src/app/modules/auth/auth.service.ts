@@ -127,6 +127,11 @@ const forgotPassword = async (email: string) => {
             email,
             status: UserStatus.ACTIVE,
         },
+        include: {
+            admin: true,
+            doctor: true,
+            patient: true,
+        },
     });
 
     if (!user) {
@@ -146,11 +151,12 @@ const forgotPassword = async (email: string) => {
 
     const resetPasswordLink = `${config.client_url}/reset-password?id=${user.id}&token=${resetPasswordToken}`;
 
+    const name = user?.admin?.name || user?.doctor?.name || user?.patient?.name;
     const subject = 'Reset Password';
     const htmlBody = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
             <h2 style="text-align: center; color: #333;">Password Reset Request</h2>
-            <p>Hello ${`User`},</p>
+            <p>Hello ${name},</p>
             <p>You requested to reset your password. Click the button below to reset it:</p>
             <div style="text-align: center; margin: 20px 0;">
             <a href="${resetPasswordLink}" style="background-color: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>

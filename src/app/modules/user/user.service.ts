@@ -3,6 +3,7 @@ import {
     Admin,
     Doctor,
     Patient,
+    Prisma,
     User,
     UserRole,
 } from '../../../../generated/prisma';
@@ -12,6 +13,10 @@ import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
 import ApiError from '../../errors/ApiError';
 import status from 'http-status';
 import deleteFile from '../../utils/deleteFile';
+import { TQueryParams } from '../../interfaces';
+import calculateOptions from '../../utils/calculateOptions';
+import buildSearchFilterConditions from '../../utils/buildConditions';
+import { userSearchableFields } from './user.constant';
 
 const createAdminIntoDB = async (
     payload: {
@@ -211,8 +216,60 @@ const createPatientIntoDB = async (
     return result;
 };
 
+const getAllUsersFromDB = async (
+    filterData: Partial<User>,
+    query: TQueryParams,
+) => {
+    const { page, limit, skip, sortBy, sortOrder, searchTerm } =
+        calculateOptions(query);
+    const andConditions: Prisma.UserWhereInput[] = [];
+
+    const searchFilterConditions = buildSearchFilterConditions(
+        searchTerm,
+        userSearchableFields,
+        filterData,
+    );
+    if (searchFilterConditions) {
+        andConditions.push(...searchFilterConditions);
+    }
+
+    // check the condition
+    // console.dir(andConditions, { depth: Infinity });
+
+    const whereCondition: Prisma.UserWhereInput = { AND: andConditions };
+
+    const result = await prisma.user.findMany({
+        where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            needPasswordChange: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            admin: true,
+            doctor: true,
+            patient: true,
+        },
+    });
+
+    const totalData = await prisma.user.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
+};
+
 export const UserServices = {
     createAdminIntoDB,
     createDoctorIntoDB,
     createPatientIntoDB,
+    getAllUsersFromDB,
 };
