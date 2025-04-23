@@ -6,6 +6,7 @@ import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { adminSearchableFields } from './admin.constant';
 import { TAdminFilters } from './admin.interface';
+import buildSearchFilterConditions from '../../utils/buildConditions';
 
 const getAllAdminsFromDB = async (
     filterData: TAdminFilters,
@@ -15,23 +16,13 @@ const getAllAdminsFromDB = async (
         calculateOptions(query);
     const andConditions: Prisma.AdminWhereInput[] = [];
 
-    if (searchTerm) {
-        andConditions.push({
-            OR: adminSearchableFields.map((field) => ({
-                [field]: {
-                    contains: searchTerm,
-                    mode: 'insensitive',
-                },
-            })),
-        });
-    }
-
-    if (Object.keys(filterData).length) {
-        andConditions.push({
-            AND: Object.entries(filterData).map(([key, value]) => ({
-                [key]: value,
-            })),
-        });
+    const searchFilterConditions = buildSearchFilterConditions(
+        searchTerm,
+        adminSearchableFields,
+        filterData,
+    );
+    if (searchFilterConditions) {
+        andConditions.push(...searchFilterConditions);
     }
 
     andConditions.push({
