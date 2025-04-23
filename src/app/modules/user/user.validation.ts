@@ -28,7 +28,18 @@ const createDoctorValidationSchema = z.object({
     }),
 });
 
+const createPatientValidationSchema = z.object({
+    password: z.string(),
+    patient: z.object({
+        name: z.string(),
+        email: z.string().email(),
+        contactNumber: z.string(),
+        address: z.string().optional(),
+    }),
+});
+
 export const UserValidations = {
     createAdminValidationSchema,
     createDoctorValidationSchema,
+    createPatientValidationSchema,
 };

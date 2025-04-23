@@ -1,5 +1,11 @@
 import prisma from '../../utils/prisma';
-import { Admin, Doctor, User, UserRole } from '../../../../generated/prisma';
+import {
+    Admin,
+    Doctor,
+    Patient,
+    User,
+    UserRole,
+} from '../../../../generated/prisma';
 import { hashPassword } from '../../utils/bcrypt';
 import type { Express } from 'express';
 import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
@@ -142,7 +148,71 @@ const createDoctorIntoDB = async (
     return result;
 };
 
+const createPatientIntoDB = async (
+    payload: {
+        password: string;
+        patient: Pick<
+            Patient,
+            'name' | 'email' | 'contactNumber' | 'profilePhoto' | 'address'
+        >;
+    },
+    file: Express.Multer.File | undefined,
+) => {
+    const isEmailExists = await prisma.patient.findUnique({
+        where: { email: payload.patient.email },
+    });
+    if (isEmailExists) {
+        deleteFile(file);
+        throw new ApiError(
+            status.CONFLICT,
+            'Email already used with another account',
+        );
+    }
+
+    const isContactNumberExists = await prisma.patient.findUnique({
+        where: { contactNumber: payload.patient.contactNumber },
+    });
+    if (isContactNumberExists) {
+        deleteFile(file);
+        throw new ApiError(
+            status.CONFLICT,
+            'Contact Number already used with another account',
+        );
+    }
+
+    const hashedPassword = await hashPassword(payload.password);
+
+    const userData: Pick<User, 'email' | 'password' | 'role'> = {
+        email: payload.patient.email,
+        password: hashedPassword,
+        role: UserRole.PATIENT,
+    };
+
+    const patientData = { ...payload.patient };
+
+    if (file?.size) {
+        const imgName = payload.patient.name + '-' + Date.now();
+        patientData.profilePhoto = await sendImageToCloudinary(
+            imgName,
+            file.path,
+        );
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+        await tx.user.create({
+            data: userData,
+        });
+        const createDoctorData = await tx.patient.create({
+            data: patientData,
+        });
+        return createDoctorData;
+    });
+
+    return result;
+};
+
 export const UserServices = {
     createAdminIntoDB,
     createDoctorIntoDB,
+    createPatientIntoDB,
 };

@@ -25,4 +25,13 @@ router.post(
     UserController.createDoctor,
 );
 
+router.post(
+    '/create-patient',
+    upload.single('file'),
+    validateRequestWithFileCleanup(
+        UserValidations.createPatientValidationSchema,
+    ),
+    UserController.createPatient,
+);
+
 export const UserRoutes = router;
