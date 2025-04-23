@@ -18,6 +18,12 @@ enum UserRole {
 enum UserStatus {
   ACTIVE
   BLOCKED
+  DELETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 model User {
@@ -30,6 +36,7 @@ model User {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   admin              Admin?
+  doctor             Doctor?
 
   @@map("users")
 }
@@ -46,4 +53,27 @@ model Admin {
   updatedAt     DateTime @updatedAt
 
   @@map("admins")
+}
+
+model Doctor {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  user                User     @relation(fields: [email], references: [email])
+  profilePhoto        String?
+  contactNumber       String   @unique
+  address             String?
+  registrationNumber  String
+  experience          Int      @default(0)
+  gender              Gender
+  appointmentFee      Int
+  qualification       String
+  currentWorkingPlace String
+  designation         String
+  averageRating       Float
+  isDeleted           Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("doctors")
 }

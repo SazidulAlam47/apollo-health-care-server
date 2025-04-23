@@ -1,10 +1,9 @@
 import express from 'express';
 import { UserController } from './user.controller';
 import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
 import { UserValidations } from './user.validation';
 import { upload } from '../../utils/sendImageToCloudinary';
-import fromDataToJson from '../../middlewares/fromDataToJson';
+import validateRequestWithFileCleanup from '../../middlewares/validateRequestWithFileCleanup';
 
 const router = express.Router();
 
@@ -12,9 +11,18 @@ router.post(
     '/create-admin',
     auth('ADMIN', 'SUPER_ADMIN'),
     upload.single('file'),
-    fromDataToJson,
-    validateRequest(UserValidations.createAdminValidationSchema),
+    validateRequestWithFileCleanup(UserValidations.createAdminValidationSchema),
     UserController.createAdmin,
+);
+
+router.post(
+    '/create-doctor',
+    auth('ADMIN', 'SUPER_ADMIN'),
+    upload.single('file'),
+    validateRequestWithFileCleanup(
+        UserValidations.createDoctorValidationSchema,
+    ),
+    UserController.createDoctor,
 );
 
 export const UserRoutes = router;
