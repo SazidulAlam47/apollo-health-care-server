@@ -6,6 +6,7 @@ import {
     Prisma,
     User,
     UserRole,
+    UserStatus,
 } from '../../../../generated/prisma';
 import { hashPassword } from '../../utils/bcrypt';
 import type { Express } from 'express';
@@ -267,9 +268,35 @@ const getAllUsersFromDB = async (
     return { data: result, meta: { page, limit, totalData, totalPage } };
 };
 
+const changeProfileStatusIntoDB = async (
+    id: string,
+    userStatus: UserStatus,
+) => {
+    const user = await prisma.user.findUnique({
+        where: { id },
+    });
+    if (!user) {
+        throw new ApiError(status.NOT_FOUND, 'User not found');
+    }
+    if (user.status === userStatus) {
+        throw new ApiError(
+            status.BAD_REQUEST,
+            `User is already ${user.status}`,
+        );
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: { id },
+        data: { status: userStatus },
+    });
+
+    return updatedUser;
+};
+
 export const UserServices = {
     createAdminIntoDB,
     createDoctorIntoDB,
     createPatientIntoDB,
     getAllUsersFromDB,
+    changeProfileStatusIntoDB,
 };

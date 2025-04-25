@@ -4,6 +4,7 @@ import auth from '../../middlewares/auth';
 import { UserValidations } from './user.validation';
 import { upload } from '../../utils/sendImageToCloudinary';
 import validateRequestWithFileCleanup from '../../middlewares/validateRequestWithFileCleanup';
+import validateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
@@ -34,6 +35,13 @@ router.post(
         UserValidations.createPatientValidationSchema,
     ),
     UserControllers.createPatient,
+);
+
+router.patch(
+    '/:id/status',
+    auth('ADMIN', 'SUPER_ADMIN'),
+    validateRequest(UserValidations.changeProfileStatusValidationSchema),
+    UserControllers.changeProfileStatus,
 );
 
 export const UserRoutes = router;
