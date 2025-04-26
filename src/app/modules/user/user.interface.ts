@@ -1,5 +1,11 @@
-import { User, UserRole } from '../../../../generated/prisma';
-
-export type TUserRole = keyof typeof UserRole;
+import { z } from 'zod';
+import { User } from '../../../../generated/prisma';
+import { UserValidations } from './user.validation';
 
 export type TUserFilterKeys = keyof User;
+
+export type TUpdateMyProfile = z.infer<
+    typeof UserValidations.updateMyProfile
+> & {
+    profilePhoto?: string;
+};

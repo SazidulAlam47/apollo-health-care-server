@@ -13,7 +13,7 @@ router.get('/:id', auth('ADMIN', 'SUPER_ADMIN'), AdminControllers.getAdminById);
 router.patch(
     '/:id',
     auth('ADMIN', 'SUPER_ADMIN'),
-    validateRequest(AdminValidations.adminUpdateValidationSchema),
+    validateRequest(AdminValidations.adminUpdate),
     AdminControllers.updateAdminById,
 );
 

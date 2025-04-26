@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Gender, UserStatus } from '../../../../generated/prisma';
 
-const createAdminValidationSchema = z.object({
+const createAdmin = z.object({
     password: z.string(),
     admin: z.object({
         name: z.string(),
@@ -10,7 +10,7 @@ const createAdminValidationSchema = z.object({
     }),
 });
 
-const createDoctorValidationSchema = z.object({
+const createDoctor = z.object({
     password: z.string(),
     doctor: z.object({
         name: z.string(),
@@ -28,7 +28,7 @@ const createDoctorValidationSchema = z.object({
     }),
 });
 
-const createPatientValidationSchema = z.object({
+const createPatient = z.object({
     password: z.string(),
     patient: z.object({
         name: z.string(),
@@ -38,13 +38,26 @@ const createPatientValidationSchema = z.object({
     }),
 });
 
-const changeProfileStatusValidationSchema = z.object({
+const changeProfileStatus = z.object({
     status: z.enum(Object.values(UserStatus) as [string, ...string[]]),
 });
 
+const updateMyProfile = z.object({
+    name: z.string().optional(),
+    contactNumber: z.string().optional(),
+    address: z.string().optional(),
+    registrationNumber: z.string().optional(),
+    experience: z.number().optional(),
+    appointmentFee: z.number().optional(),
+    qualification: z.string().optional(),
+    currentWorkingPlace: z.string().optional(),
+    designation: z.string().optional(),
+});
+
 export const UserValidations = {
-    createAdminValidationSchema,
-    createDoctorValidationSchema,
-    createPatientValidationSchema,
-    changeProfileStatusValidationSchema,
+    createAdmin,
+    createDoctor,
+    createPatient,
+    changeProfileStatus,
+    updateMyProfile,
 };

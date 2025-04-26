@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { TUserRole } from '../modules/user/user.interface';
 import ApiError from '../errors/ApiError';
 import status from 'http-status';
 import { verifyToken } from '../utils/token';
 import config from '../config';
 import { Secret } from 'jsonwebtoken';
 import prisma from '../utils/prisma';
-import { UserStatus } from '../../../generated/prisma';
+import { UserRole, UserStatus } from '../../../generated/prisma';
 import { CustomRequest } from '../interfaces';
 
-const auth = (...requiredRoles: TUserRole[]) => {
+const auth = (...requiredRoles: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const tokenBearer = req.headers.authorization;
         if (!tokenBearer) {

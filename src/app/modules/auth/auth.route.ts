@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
     '/login',
-    validateRequest(AuthValidations.loginValidationSchema),
+    validateRequest(AuthValidations.login),
     AuthControllers.loginUser,
 );
 
@@ -19,19 +19,19 @@ router.get('/refresh-token', AuthControllers.refreshToken);
 router.post(
     '/change-password',
     auth(),
-    validateRequest(AuthValidations.changePasswordValidationSchema),
+    validateRequest(AuthValidations.changePassword),
     AuthControllers.changePassword,
 );
 
 router.post(
     '/forgot-password',
-    validateRequest(AuthValidations.forgotPasswordValidationSchema),
+    validateRequest(AuthValidations.forgotPassword),
     AuthControllers.forgotPassword,
 );
 
 router.post(
     '/reset-password',
-    validateRequest(AuthValidations.resetPasswordValidationSchema),
+    validateRequest(AuthValidations.resetPassword),
     AuthControllers.resetPassword,
 );
 

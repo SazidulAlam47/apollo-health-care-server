@@ -1,27 +1,27 @@
 import { z } from 'zod';
 
-const loginValidationSchema = z.object({
+const login = z.object({
     email: z.string().email(),
     password: z.string(),
 });
 
-const changePasswordValidationSchema = z.object({
+const changePassword = z.object({
     oldPassword: z.string(),
     newPassword: z.string(),
 });
 
-const forgotPasswordValidationSchema = z.object({
+const forgotPassword = z.object({
     email: z.string().email(),
 });
 
-const resetPasswordValidationSchema = z.object({
+const resetPassword = z.object({
     id: z.string(),
     password: z.string(),
 });
 
 export const AuthValidations = {
-    loginValidationSchema,
-    changePasswordValidationSchema,
-    forgotPasswordValidationSchema,
-    resetPasswordValidationSchema,
+    login,
+    changePassword,
+    forgotPassword,
+    resetPassword,
 };

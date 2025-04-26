@@ -3,5 +3,5 @@ import { UserRole } from '../../../generated/prisma';
 
 export type TDecodedUser = {
     email: string;
-    role: keyof typeof UserRole;
+    role: UserRole;
 } & JwtPayload;

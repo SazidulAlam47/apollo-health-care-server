@@ -19,6 +19,8 @@ import calculateOptions from '../../utils/calculateOptions';
 import buildSearchFilterConditions from '../../utils/buildConditions';
 import { userSearchableFields } from './user.constant';
 import { TDecodedUser } from '../../interfaces/jwt.interface';
+import { TUpdateMyProfile } from './user.interface';
+import pick from '../../utils/pick';
 
 const createAdminIntoDB = async (
     payload: {
@@ -296,7 +298,7 @@ const changeProfileStatusIntoDB = async (
 
 const getMyProfileFromDB = async (userData: TDecodedUser) => {
     const user = await prisma.user.findUnique({
-        where: { email: userData.email, status: UserStatus.ACTIVE },
+        where: { email: userData.email, status: 'ACTIVE' },
         select: {
             id: true,
             email: true,
@@ -319,6 +321,60 @@ const getMyProfileFromDB = async (userData: TDecodedUser) => {
     return { ...userInfo, ...admin, ...doctor, ...patient };
 };
 
+const updateMyProfileIntoDB = async (
+    userData: TDecodedUser,
+    payload: TUpdateMyProfile,
+    file: Express.Multer.File | undefined,
+) => {
+    const user = await prisma.user.findUnique({
+        where: { email: userData.email, status: 'ACTIVE' },
+    });
+    if (!user) {
+        deleteFile(file);
+        throw new ApiError(status.NOT_FOUND, 'User not found');
+    }
+
+    if (file) {
+        const imgName = `${user.id}` + '-' + Date.now();
+        payload.profilePhoto = await sendImageToCloudinary(imgName, file.path);
+    }
+
+    let result;
+    if (user.role == 'ADMIN') {
+        const adminUpdate = pick(payload, [
+            'name',
+            'contactNumber',
+            'profilePhoto',
+        ]);
+        result = await prisma.admin.update({
+            where: { email: user.email },
+            data: adminUpdate,
+        });
+    }
+
+    if (user.role == 'PATIENT') {
+        const patientUpdate = pick(payload, [
+            'name',
+            'contactNumber',
+            'address',
+            'profilePhoto',
+        ]);
+        result = await prisma.patient.update({
+            where: { email: user.email },
+            data: patientUpdate,
+        });
+    }
+
+    if (user.role == 'DOCTOR') {
+        result = await prisma.patient.update({
+            where: { email: user.email },
+            data: payload,
+        });
+    }
+
+    return result;
+};
+
 export const UserServices = {
     createAdminIntoDB,
     createDoctorIntoDB,
@@ -326,4 +382,5 @@ export const UserServices = {
     getAllUsersFromDB,
     changeProfileStatusIntoDB,
     getMyProfileFromDB,
+    updateMyProfileIntoDB,
 };

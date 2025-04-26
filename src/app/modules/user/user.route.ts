@@ -16,7 +16,7 @@ router.post(
     '/create-admin',
     auth('ADMIN', 'SUPER_ADMIN'),
     upload.single('file'),
-    validateRequestWithFileCleanup(UserValidations.createAdminValidationSchema),
+    validateRequestWithFileCleanup(UserValidations.createAdmin),
     UserControllers.createAdmin,
 );
 
@@ -24,26 +24,30 @@ router.post(
     '/create-doctor',
     auth('ADMIN', 'SUPER_ADMIN'),
     upload.single('file'),
-    validateRequestWithFileCleanup(
-        UserValidations.createDoctorValidationSchema,
-    ),
+    validateRequestWithFileCleanup(UserValidations.createDoctor),
     UserControllers.createDoctor,
 );
 
 router.post(
     '/create-patient',
     upload.single('file'),
-    validateRequestWithFileCleanup(
-        UserValidations.createPatientValidationSchema,
-    ),
+    validateRequestWithFileCleanup(UserValidations.createPatient),
     UserControllers.createPatient,
 );
 
 router.patch(
     '/:id/status',
     auth('ADMIN', 'SUPER_ADMIN'),
-    validateRequest(UserValidations.changeProfileStatusValidationSchema),
+    validateRequest(UserValidations.changeProfileStatus),
     UserControllers.changeProfileStatus,
+);
+
+router.patch(
+    '/update-my-profile',
+    auth('ADMIN', 'DOCTOR', 'PATIENT'),
+    upload.single('file'),
+    validateRequestWithFileCleanup(UserValidations.updateMyProfile),
+    UserControllers.updateMyProfile,
 );
 
 export const UserRoutes = router;
