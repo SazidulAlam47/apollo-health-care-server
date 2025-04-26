@@ -5,6 +5,7 @@ import catchAsync from '../../utils/catchAsync';
 import pick from '../../utils/pick';
 import { userFilters } from './user.constant';
 import { queryFilters } from '../../constants';
+import { CustomRequest } from '../../interfaces';
 
 const createAdmin = catchAsync(async (req, res) => {
     const result = await UserServices.createAdminIntoDB(req.body, req.file);
@@ -50,8 +51,18 @@ const changeProfileStatus = catchAsync(async (req, res) => {
     const { status: userStatus } = req.body;
     const result = await UserServices.changeProfileStatusIntoDB(id, userStatus);
     sendResponse(res, {
-        statusCode: status.CREATED,
+        statusCode: status.OK,
         message: 'Status updated Successfully',
+        data: result,
+    });
+});
+
+const getMyProfile = catchAsync(async (req, res) => {
+    const userData = (req as CustomRequest).user;
+    const result = await UserServices.getMyProfileFromDB(userData);
+    sendResponse(res, {
+        statusCode: status.OK,
+        message: 'Profile fetched Successfully',
         data: result,
     });
 });
@@ -62,4 +73,5 @@ export const UserControllers = {
     createPatient,
     getAllUsers,
     changeProfileStatus,
+    getMyProfile,
 };

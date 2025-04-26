@@ -18,6 +18,7 @@ import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
 import buildSearchFilterConditions from '../../utils/buildConditions';
 import { userSearchableFields } from './user.constant';
+import { TDecodedUser } from '../../interfaces/jwt.interface';
 
 const createAdminIntoDB = async (
     payload: {
@@ -293,10 +294,36 @@ const changeProfileStatusIntoDB = async (
     return updatedUser;
 };
 
+const getMyProfileFromDB = async (userData: TDecodedUser) => {
+    const user = await prisma.user.findUnique({
+        where: { email: userData.email, status: UserStatus.ACTIVE },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            needPasswordChange: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            admin: userData.role === 'ADMIN',
+            doctor: userData.role === 'DOCTOR',
+            patient: userData.role === 'PATIENT',
+        },
+    });
+    if (!user) {
+        throw new ApiError(status.NOT_FOUND, 'User not found');
+    }
+
+    const { admin, doctor, patient, ...userInfo } = user;
+
+    return { ...userInfo, ...admin, ...doctor, ...patient };
+};
+
 export const UserServices = {
     createAdminIntoDB,
     createDoctorIntoDB,
     createPatientIntoDB,
     getAllUsersFromDB,
     changeProfileStatusIntoDB,
+    getMyProfileFromDB,
 };

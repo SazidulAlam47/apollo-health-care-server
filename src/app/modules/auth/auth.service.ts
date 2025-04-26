@@ -151,7 +151,11 @@ const forgotPassword = async (email: string) => {
 
     const resetPasswordLink = `${config.client_url}/reset-password?id=${user.id}&token=${resetPasswordToken}`;
 
-    const name = user?.admin?.name || user?.doctor?.name || user?.patient?.name;
+    const name =
+        user?.admin?.name ||
+        user?.doctor?.name ||
+        user?.patient?.name ||
+        'User';
     const subject = 'Reset Password';
     const htmlBody = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">

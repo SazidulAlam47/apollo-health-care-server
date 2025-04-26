@@ -10,6 +10,8 @@ const router = express.Router();
 
 router.get('/', auth('ADMIN', 'SUPER_ADMIN'), UserControllers.getAllUsers);
 
+router.get('/me', auth(), UserControllers.getMyProfile);
+
 router.post(
     '/create-admin',
     auth('ADMIN', 'SUPER_ADMIN'),
