@@ -1,3 +1,4 @@
+import { SpecialtiesRoutes } from './../modules/specialties/specialties.route';
 import { Router } from 'express';
 import { UserRoutes } from '../modules/user/user.route';
 import { AdminRoutes } from '../modules/admin/admin.route';
@@ -17,6 +18,10 @@ const moduleRoutes = [
     {
         path: '/auth',
         route: AuthRoutes,
+    },
+    {
+        path: '/specialties',
+        route: SpecialtiesRoutes,
     },
 ];
 

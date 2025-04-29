@@ -3,11 +3,20 @@ import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import config from '../config';
 
 const sendImageToCloudinary = async (
     imgName: string,
     path: string,
 ): Promise<string> => {
+    // Configuration
+    cloudinary.config({
+        cloud_name: config.cloudinary.name as string,
+        api_key: config.cloudinary.key as string,
+        api_secret: config.cloudinary.secret as string,
+    });
+
+    // Upload an image
     const uploadResult: UploadApiResponse | void = await cloudinary.uploader
         .upload(path, {
             public_id: imgName,
@@ -16,7 +25,7 @@ const sendImageToCloudinary = async (
             console.log(error);
         });
 
-    // delete the file from file system
+    // Delete the file from file system
     fs.unlinkSync(path);
 
     if (uploadResult) {

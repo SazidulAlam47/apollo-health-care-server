@@ -23,6 +23,11 @@ export default {
         user: process.env.NODE_MAILER_USER,
         password: process.env.NODE_MAILER_PASSWORD,
     },
+    cloudinary: {
+        name: process.env.CLOUDINARY_NAME,
+        key: process.env.CLOUDINARY_KEY,
+        secret: process.env.CLOUDINARY_SECRET,
+    },
     ssl: {
         storeId: process.env.STORE_ID,
         storePass: process.env.STORE_PASS,
