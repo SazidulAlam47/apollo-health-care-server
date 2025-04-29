@@ -6,11 +6,15 @@ import validateRequestWithFileCleanup from '../../middlewares/validateRequestWit
 
 const router = express.Router();
 
+router.get('/', SpecialtiesControllers.getAllSpecialties);
+
 router.post(
     '/',
     upload.single('file'),
     validateRequestWithFileCleanup(SpecialtiesValidations.createSpecialties),
     SpecialtiesControllers.createSpecialties,
 );
+
+router.delete('/:id', SpecialtiesControllers.deleteSpecialtiesById);
 
 export const SpecialtiesRoutes = router;
