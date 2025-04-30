@@ -27,6 +27,15 @@ const getDoctorById = catchAsync(async (req, res) => {
     });
 });
 
+const deleteDoctorById = catchAsync(async (req, res) => {
+    const result = await DoctorServices.deleteDoctorByIdFromDB(req.params.id);
+    sendResponse(res, {
+        statusCode: status.OK,
+        message: 'Doctor is deleted successfully',
+        data: result,
+    });
+});
+
 const updateDoctorById = catchAsync(async (req, res) => {
     const result = await DoctorServices.updateDoctorByIdIntoDB(
         req.params.id,
@@ -35,15 +44,6 @@ const updateDoctorById = catchAsync(async (req, res) => {
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Doctor is updated successfully',
-        data: result,
-    });
-});
-
-const deleteDoctorById = catchAsync(async (req, res) => {
-    const result = await DoctorServices.deleteDoctorByIdFromDB(req.params.id);
-    sendResponse(res, {
-        statusCode: status.OK,
-        message: 'Doctor is deleted successfully',
         data: result,
     });
 });

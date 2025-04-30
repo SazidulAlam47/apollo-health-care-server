@@ -14,17 +14,17 @@ router.get(
     DoctorControllers.getDoctorById,
 );
 
-router.patch(
-    '/:id',
-    auth('DOCTOR'),
-    validateRequest(DoctorValidations.doctorUpdate),
-    DoctorControllers.updateDoctorById,
-);
-
 router.delete(
     '/:id',
     auth('ADMIN', 'SUPER_ADMIN'),
     DoctorControllers.deleteDoctorById,
+);
+
+router.patch(
+    '/:id',
+    auth('ADMIN', 'SUPER_ADMIN'),
+    validateRequest(DoctorValidations.doctorUpdate),
+    DoctorControllers.updateDoctorById,
 );
 
 export const DoctorRoutes = router;
