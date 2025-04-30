@@ -9,12 +9,29 @@ import { doctorSearchableFields } from './doctor.constant';
 import { TDoctorUpdate } from './doctor.interface';
 
 const getAllDoctorsFromDB = async (
-    filterData: Partial<Doctor>,
+    filters: Partial<Doctor> & { specialties?: string },
     query: TQueryParams,
 ) => {
     const { page, limit, skip, sortBy, sortOrder, searchTerm } =
         calculateOptions(query);
+    const { specialties, ...filterData } = filters;
+
     const andConditions: Prisma.DoctorWhereInput[] = [];
+
+    if (specialties && specialties?.length) {
+        andConditions.push({
+            doctorSpecialties: {
+                some: {
+                    specialties: {
+                        title: {
+                            contains: specialties,
+                            mode: 'insensitive',
+                        },
+                    },
+                },
+            },
+        });
+    }
 
     const searchFilterConditions = buildSearchFilterConditions(
         searchTerm,

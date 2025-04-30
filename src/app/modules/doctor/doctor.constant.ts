@@ -13,4 +13,5 @@ export const doctorFilters: TDoctorFilterKeys[] = [
     'contactNumber',
     'designation',
     'gender',
+    'specialties',
 ];
