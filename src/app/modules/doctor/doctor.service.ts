@@ -78,6 +78,13 @@ const getAllDoctorsFromDB = async (
 const getDoctorByIdFromDB = async (id: string) => {
     const result = await prisma.doctor.findUnique({
         where: { id, isDeleted: false },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialties: true,
+                },
+            },
+        },
     });
     return result;
 };

@@ -7,7 +7,7 @@ const doctorUpdate = z.object({
     address: z.string().optional(),
     registrationNumber: z.string().optional(),
     experience: z.number().optional(),
-    gender: z.enum([Gender.MALE, Gender.FEMALE]).optional(),
+    gender: z.nativeEnum(Gender).optional(),
     appointmentFee: z.number().optional(),
     qualification: z.string().optional(),
     currentWorkingPlace: z.string().optional(),

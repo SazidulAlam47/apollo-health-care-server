@@ -19,7 +19,7 @@ const createDoctor = z.object({
         address: z.string().optional(),
         registrationNumber: z.string(),
         experience: z.number().default(0),
-        gender: z.enum([Gender.MALE, Gender.FEMALE]),
+        gender: z.nativeEnum(Gender),
         appointmentFee: z.number(),
         qualification: z.string(),
         currentWorkingPlace: z.string(),
@@ -39,7 +39,7 @@ const createPatient = z.object({
 });
 
 const changeProfileStatus = z.object({
-    status: z.enum(Object.values(UserStatus) as [string, ...string[]]),
+    status: z.nativeEnum(UserStatus),
 });
 
 const updateMyProfile = z.object({
