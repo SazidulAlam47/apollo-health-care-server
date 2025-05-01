@@ -42,6 +42,18 @@ enum MaritalStatus {
   UNMARRIED
 }
 
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
 model User {
   id                 String     @id @default(uuid())
   email              String     @unique
@@ -92,6 +104,8 @@ model Doctor {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   doctorSpecialties   DoctorSpecialties[]
+  appointment         Appointment[]
+  doctorSchedules     DoctorSchedules[]
 
   @@map("doctors")
 }
@@ -109,6 +123,7 @@ model Patient {
   updatedAt         DateTime           @updatedAt
   patientHealthData PatientHealthData?
   medicalReport     MedicalReport[]
+  appointment       Appointment[]
 
   @@map("patients")
 }
@@ -168,4 +183,43 @@ model MedicalReport {
   updatedAt  DateTime @updatedAt
 
   @@map("medical_report")
+}
+
+model Schedule {
+  id              String            @id @default(uuid())
+  startDate       DateTime
+  endDate         DateTime
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  doctorSchedules DoctorSchedules[]
+
+  @@map("schedules")
+}
+
+model Appointment {
+  id             String            @id @default(uuid())
+  patientId      String
+  patient        Patient           @relation(fields: [patientId], references: [id])
+  doctorId       String
+  doctor         Doctor            @relation(fields: [doctorId], references: [id])
+  scheduleId     String
+  videoCallingId String
+  status         AppointmentStatus
+  paymentStatus  PaymentStatus
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@map("appointments")
+}
+
+model DoctorSchedules {
+  doctorId      String
+  doctor        Doctor   @relation(fields: [doctorId], references: [id])
+  scheduleId    String
+  schedule      Schedule @relation(fields: [scheduleId], references: [id])
+  isBooked      Boolean
+  appointmentId String?
+
+  @@id([doctorId, scheduleId])
+  @@map("doctor_schedules")
 }

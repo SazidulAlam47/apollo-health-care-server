@@ -12,7 +12,7 @@ const patientUpdate = z.object({
     address: z.string().optional(),
     patientHealthData: z
         .object({
-            dateOfBirth: z.string().optional(),
+            dateOfBirth: z.string().datetime().optional(),
             gender: z.nativeEnum(Gender).optional(),
             bloodGroup: z.nativeEnum(BloodGroup).optional(),
             hasAllergies: z.boolean().optional(),
@@ -33,7 +33,7 @@ const patientUpdate = z.object({
     medicalReport: z
         .object({
             reportName: z.string(),
-            reportLink: z.string(),
+            reportLink: z.string().url(),
         })
         .optional(),
 });
