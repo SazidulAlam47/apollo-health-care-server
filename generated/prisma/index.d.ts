@@ -11214,24 +11214,24 @@ export namespace Prisma {
 
   export type ScheduleMinAggregateOutputType = {
     id: string | null
-    startDate: Date | null
-    endDate: Date | null
+    startDateTime: Date | null
+    endDateTime: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ScheduleMaxAggregateOutputType = {
     id: string | null
-    startDate: Date | null
-    endDate: Date | null
+    startDateTime: Date | null
+    endDateTime: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ScheduleCountAggregateOutputType = {
     id: number
-    startDate: number
-    endDate: number
+    startDateTime: number
+    endDateTime: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11240,24 +11240,24 @@ export namespace Prisma {
 
   export type ScheduleMinAggregateInputType = {
     id?: true
-    startDate?: true
-    endDate?: true
+    startDateTime?: true
+    endDateTime?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ScheduleMaxAggregateInputType = {
     id?: true
-    startDate?: true
-    endDate?: true
+    startDateTime?: true
+    endDateTime?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ScheduleCountAggregateInputType = {
     id?: true
-    startDate?: true
-    endDate?: true
+    startDateTime?: true
+    endDateTime?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11337,8 +11337,8 @@ export namespace Prisma {
 
   export type ScheduleGroupByOutputType = {
     id: string
-    startDate: Date
-    endDate: Date
+    startDateTime: Date
+    endDateTime: Date
     createdAt: Date
     updatedAt: Date
     _count: ScheduleCountAggregateOutputType | null
@@ -11362,8 +11362,8 @@ export namespace Prisma {
 
   export type ScheduleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    startDate?: boolean
-    endDate?: boolean
+    startDateTime?: boolean
+    endDateTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     doctorSchedules?: boolean | Schedule$doctorSchedulesArgs<ExtArgs>
@@ -11372,29 +11372,29 @@ export namespace Prisma {
 
   export type ScheduleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    startDate?: boolean
-    endDate?: boolean
+    startDateTime?: boolean
+    endDateTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["schedule"]>
 
   export type ScheduleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    startDate?: boolean
-    endDate?: boolean
+    startDateTime?: boolean
+    endDateTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["schedule"]>
 
   export type ScheduleSelectScalar = {
     id?: boolean
-    startDate?: boolean
-    endDate?: boolean
+    startDateTime?: boolean
+    endDateTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ScheduleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["schedule"]>
+  export type ScheduleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDateTime" | "endDateTime" | "createdAt" | "updatedAt", ExtArgs["result"]["schedule"]>
   export type ScheduleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     doctorSchedules?: boolean | Schedule$doctorSchedulesArgs<ExtArgs>
     _count?: boolean | ScheduleCountOutputTypeDefaultArgs<ExtArgs>
@@ -11409,8 +11409,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      startDate: Date
-      endDate: Date
+      startDateTime: Date
+      endDateTime: Date
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["schedule"]>
@@ -11838,8 +11838,8 @@ export namespace Prisma {
    */
   interface ScheduleFieldRefs {
     readonly id: FieldRef<"Schedule", 'String'>
-    readonly startDate: FieldRef<"Schedule", 'DateTime'>
-    readonly endDate: FieldRef<"Schedule", 'DateTime'>
+    readonly startDateTime: FieldRef<"Schedule", 'DateTime'>
+    readonly endDateTime: FieldRef<"Schedule", 'DateTime'>
     readonly createdAt: FieldRef<"Schedule", 'DateTime'>
     readonly updatedAt: FieldRef<"Schedule", 'DateTime'>
   }
@@ -14580,8 +14580,8 @@ export namespace Prisma {
 
   export const ScheduleScalarFieldEnum: {
     id: 'id',
-    startDate: 'startDate',
-    endDate: 'endDate',
+    startDateTime: 'startDateTime',
+    endDateTime: 'endDateTime',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15447,8 +15447,8 @@ export namespace Prisma {
     OR?: ScheduleWhereInput[]
     NOT?: ScheduleWhereInput | ScheduleWhereInput[]
     id?: StringFilter<"Schedule"> | string
-    startDate?: DateTimeFilter<"Schedule"> | Date | string
-    endDate?: DateTimeFilter<"Schedule"> | Date | string
+    startDateTime?: DateTimeFilter<"Schedule"> | Date | string
+    endDateTime?: DateTimeFilter<"Schedule"> | Date | string
     createdAt?: DateTimeFilter<"Schedule"> | Date | string
     updatedAt?: DateTimeFilter<"Schedule"> | Date | string
     doctorSchedules?: DoctorSchedulesListRelationFilter
@@ -15456,8 +15456,8 @@ export namespace Prisma {
 
   export type ScheduleOrderByWithRelationInput = {
     id?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
+    startDateTime?: SortOrder
+    endDateTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     doctorSchedules?: DoctorSchedulesOrderByRelationAggregateInput
@@ -15465,20 +15465,21 @@ export namespace Prisma {
 
   export type ScheduleWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    startDateTime_endDateTime?: ScheduleStartDateTimeEndDateTimeCompoundUniqueInput
     AND?: ScheduleWhereInput | ScheduleWhereInput[]
     OR?: ScheduleWhereInput[]
     NOT?: ScheduleWhereInput | ScheduleWhereInput[]
-    startDate?: DateTimeFilter<"Schedule"> | Date | string
-    endDate?: DateTimeFilter<"Schedule"> | Date | string
+    startDateTime?: DateTimeFilter<"Schedule"> | Date | string
+    endDateTime?: DateTimeFilter<"Schedule"> | Date | string
     createdAt?: DateTimeFilter<"Schedule"> | Date | string
     updatedAt?: DateTimeFilter<"Schedule"> | Date | string
     doctorSchedules?: DoctorSchedulesListRelationFilter
-  }, "id">
+  }, "id" | "startDateTime_endDateTime">
 
   export type ScheduleOrderByWithAggregationInput = {
     id?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
+    startDateTime?: SortOrder
+    endDateTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ScheduleCountOrderByAggregateInput
@@ -15491,8 +15492,8 @@ export namespace Prisma {
     OR?: ScheduleScalarWhereWithAggregatesInput[]
     NOT?: ScheduleScalarWhereWithAggregatesInput | ScheduleScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Schedule"> | string
-    startDate?: DateTimeWithAggregatesFilter<"Schedule"> | Date | string
-    endDate?: DateTimeWithAggregatesFilter<"Schedule"> | Date | string
+    startDateTime?: DateTimeWithAggregatesFilter<"Schedule"> | Date | string
+    endDateTime?: DateTimeWithAggregatesFilter<"Schedule"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"Schedule"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Schedule"> | Date | string
   }
@@ -16344,8 +16345,8 @@ export namespace Prisma {
 
   export type ScheduleCreateInput = {
     id?: string
-    startDate: Date | string
-    endDate: Date | string
+    startDateTime: Date | string
+    endDateTime: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesCreateNestedManyWithoutScheduleInput
@@ -16353,8 +16354,8 @@ export namespace Prisma {
 
   export type ScheduleUncheckedCreateInput = {
     id?: string
-    startDate: Date | string
-    endDate: Date | string
+    startDateTime: Date | string
+    endDateTime: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedManyWithoutScheduleInput
@@ -16362,8 +16363,8 @@ export namespace Prisma {
 
   export type ScheduleUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUpdateManyWithoutScheduleNestedInput
@@ -16371,8 +16372,8 @@ export namespace Prisma {
 
   export type ScheduleUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateManyWithoutScheduleNestedInput
@@ -16380,24 +16381,24 @@ export namespace Prisma {
 
   export type ScheduleCreateManyInput = {
     id?: string
-    startDate: Date | string
-    endDate: Date | string
+    startDateTime: Date | string
+    endDateTime: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ScheduleUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ScheduleUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17209,26 +17210,31 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ScheduleStartDateTimeEndDateTimeCompoundUniqueInput = {
+    startDateTime: Date | string
+    endDateTime: Date | string
+  }
+
   export type ScheduleCountOrderByAggregateInput = {
     id?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
+    startDateTime?: SortOrder
+    endDateTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ScheduleMaxOrderByAggregateInput = {
     id?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
+    startDateTime?: SortOrder
+    endDateTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ScheduleMinOrderByAggregateInput = {
     id?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
+    startDateTime?: SortOrder
+    endDateTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19686,16 +19692,16 @@ export namespace Prisma {
 
   export type ScheduleCreateWithoutDoctorSchedulesInput = {
     id?: string
-    startDate: Date | string
-    endDate: Date | string
+    startDateTime: Date | string
+    endDateTime: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ScheduleUncheckedCreateWithoutDoctorSchedulesInput = {
     id?: string
-    startDate: Date | string
-    endDate: Date | string
+    startDateTime: Date | string
+    endDateTime: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19773,16 +19779,16 @@ export namespace Prisma {
 
   export type ScheduleUpdateWithoutDoctorSchedulesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ScheduleUncheckedUpdateWithoutDoctorSchedulesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

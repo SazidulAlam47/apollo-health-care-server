@@ -147,14 +147,14 @@ const updateDoctorByIdIntoDB = async (id: string, payload: TDoctorUpdate) => {
                 for (const addSpecialty of addSpecialties) {
                     // check before adding
                     const isSpecialtyExists =
-                        await tx.doctorSpecialties.findMany({
+                        await tx.doctorSpecialties.findFirst({
                             where: {
                                 doctorId: doctor.id,
                                 specialitiesId: addSpecialty.specialtiesId,
                             },
                         });
                     // if exists then skip
-                    if (isSpecialtyExists?.length) continue;
+                    if (isSpecialtyExists) continue;
 
                     await tx.doctorSpecialties.create({
                         data: {

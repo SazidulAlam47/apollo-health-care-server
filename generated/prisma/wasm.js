@@ -219,8 +219,8 @@ exports.Prisma.MedicalReportScalarFieldEnum = {
 
 exports.Prisma.ScheduleScalarFieldEnum = {
   id: 'id',
-  startDate: 'startDate',
-  endDate: 'endDate',
+  startDateTime: 'startDateTime',
+  endDateTime: 'endDateTime',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
