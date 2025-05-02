@@ -16486,7 +16486,7 @@ export namespace Prisma {
   }
 
   export type DoctorSchedulesCreateInput = {
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
     doctor: DoctorCreateNestedOneWithoutDoctorSchedulesInput
     schedule: ScheduleCreateNestedOneWithoutDoctorSchedulesInput
@@ -16495,7 +16495,7 @@ export namespace Prisma {
   export type DoctorSchedulesUncheckedCreateInput = {
     doctorId: string
     scheduleId: string
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
   }
 
@@ -16516,7 +16516,7 @@ export namespace Prisma {
   export type DoctorSchedulesCreateManyInput = {
     doctorId: string
     scheduleId: string
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
   }
 
@@ -18692,14 +18692,14 @@ export namespace Prisma {
   }
 
   export type DoctorSchedulesCreateWithoutDoctorInput = {
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
     schedule: ScheduleCreateNestedOneWithoutDoctorSchedulesInput
   }
 
   export type DoctorSchedulesUncheckedCreateWithoutDoctorInput = {
     scheduleId: string
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
   }
 
@@ -19428,14 +19428,14 @@ export namespace Prisma {
   }
 
   export type DoctorSchedulesCreateWithoutScheduleInput = {
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
     doctor: DoctorCreateNestedOneWithoutDoctorSchedulesInput
   }
 
   export type DoctorSchedulesUncheckedCreateWithoutScheduleInput = {
     doctorId: string
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
   }
 
@@ -19810,7 +19810,7 @@ export namespace Prisma {
 
   export type DoctorSchedulesCreateManyDoctorInput = {
     scheduleId: string
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
   }
 
@@ -19971,7 +19971,7 @@ export namespace Prisma {
 
   export type DoctorSchedulesCreateManyScheduleInput = {
     doctorId: string
-    isBooked: boolean
+    isBooked?: boolean
     appointmentId?: string | null
   }
 

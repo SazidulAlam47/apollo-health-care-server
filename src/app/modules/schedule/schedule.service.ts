@@ -56,6 +56,12 @@ const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     return result;
 };
 
+const getAllSchedulesFromDB = async () => {
+    const result = await prisma.schedule.findMany();
+    return result;
+};
+
 export const ScheduleServices = {
     createScheduleIntoDB,
+    getAllSchedulesFromDB,
 };

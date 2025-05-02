@@ -13,7 +13,7 @@ const createSchedule = catchAsync(async (req, res) => {
 });
 
 const getAllSchedules = catchAsync(async (req, res) => {
-    const result = null;
+    const result = await ScheduleServices.getAllSchedulesFromDB();
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Schedules are fetched successfully',
