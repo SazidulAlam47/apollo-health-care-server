@@ -5,7 +5,7 @@ import { verifyToken } from '../utils/token';
 import config from '../config';
 import { Secret } from 'jsonwebtoken';
 import prisma from '../utils/prisma';
-import { UserRole, UserStatus } from '../../../generated/prisma';
+import { UserRole } from '../../../generated/prisma';
 import { CustomRequest } from '../interfaces';
 
 const auth = (...requiredRoles: UserRole[]) => {
@@ -26,7 +26,7 @@ const auth = (...requiredRoles: UserRole[]) => {
         const { email, role } = decoded;
 
         const user = await prisma.user.findUnique({
-            where: { email, status: UserStatus.ACTIVE },
+            where: { email, status: 'ACTIVE' },
         });
         if (!user) {
             throw new ApiError(status.UNAUTHORIZED, 'You are not authorized');

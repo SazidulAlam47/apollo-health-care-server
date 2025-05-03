@@ -1,5 +1,5 @@
 import status from 'http-status';
-import { Admin, Prisma, UserStatus } from '../../../../generated/prisma';
+import { Admin, Prisma } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
 import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
@@ -60,6 +60,7 @@ const getAdminByIdFromDB = async (id: string) => {
 const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
     const admin = await prisma.admin.findUnique({
         where: { id, isDeleted: false },
+        select: { id: true },
     });
     if (!admin) {
         throw new ApiError(status.NOT_FOUND, 'Admin not found');
@@ -74,6 +75,7 @@ const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
 const deleteAdminByIdFromDB = async (id: string) => {
     const admin = await prisma.admin.findUnique({
         where: { id, isDeleted: false },
+        select: { id: true },
     });
     if (!admin) {
         throw new ApiError(status.NOT_FOUND, 'Admin not found');
@@ -86,7 +88,7 @@ const deleteAdminByIdFromDB = async (id: string) => {
 
         await tx.user.update({
             where: { email: adminDeletedData.email },
-            data: { status: UserStatus.DELETED },
+            data: { status: 'DELETED' },
         });
 
         return adminDeletedData;

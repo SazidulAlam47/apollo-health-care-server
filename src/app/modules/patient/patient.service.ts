@@ -69,6 +69,7 @@ const getPatientByIdFromDB = async (id: string) => {
 const deletePatientByIdFromDB = async (id: string) => {
     const patient = await prisma.patient.findUnique({
         where: { id, isDeleted: false },
+        select: { id: true },
     });
     if (!patient) {
         throw new ApiError(status.NOT_FOUND, 'Patient not found');
@@ -93,6 +94,7 @@ const updatePatientByIdIntoDB = async (id: string, payload: TPatientUpdate) => {
     const { patientHealthData, medicalReport, ...patientData } = payload;
     const patient = await prisma.patient.findUnique({
         where: { id, isDeleted: false },
+        select: { id: true },
     });
     if (!patient) {
         throw new ApiError(status.NOT_FOUND, 'Patient not found');

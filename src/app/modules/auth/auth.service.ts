@@ -1,5 +1,4 @@
 import ms from 'ms';
-import { UserStatus } from '../../../../generated/prisma';
 import config from '../../config';
 import { comparePassword, hashPassword } from '../../utils/bcrypt';
 import prisma from '../../utils/prisma';
@@ -14,7 +13,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     const user = await prisma.user.findUnique({
         where: {
             email: payload.email,
-            status: UserStatus.ACTIVE,
+            status: 'ACTIVE',
         },
     });
 
@@ -64,7 +63,7 @@ const refreshToken = async (refreshToken: string) => {
     const user = await prisma.user.findUnique({
         where: {
             email: decoded.email,
-            status: UserStatus.ACTIVE,
+            status: 'ACTIVE',
         },
     });
 
@@ -91,7 +90,7 @@ const changePassword = async (
     payload: { oldPassword: string; newPassword: string },
 ) => {
     const user = await prisma.user.findUnique({
-        where: { email: decodedUser.email, status: UserStatus.ACTIVE },
+        where: { email: decodedUser.email, status: 'ACTIVE' },
     });
     if (!user) {
         throw new ApiError(status.NOT_FOUND, 'User not Found');
@@ -125,7 +124,7 @@ const forgotPassword = async (email: string) => {
     const user = await prisma.user.findUnique({
         where: {
             email,
-            status: UserStatus.ACTIVE,
+            status: 'ACTIVE',
         },
         include: {
             admin: true,
@@ -191,7 +190,7 @@ const resetPassword = async (
     const decoded = verifyToken(token, config.jwt.reset_pass_secret as Secret);
 
     const user = await prisma.user.findUnique({
-        where: { id: payload.id, status: UserStatus.ACTIVE },
+        where: { id: payload.id, status: 'ACTIVE' },
     });
     if (!user) {
         throw new ApiError(status.NOT_FOUND, 'User not found');

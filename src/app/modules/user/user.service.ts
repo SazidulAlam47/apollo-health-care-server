@@ -31,6 +31,7 @@ const createAdminIntoDB = async (
 ) => {
     const isEmailExists = await prisma.admin.findUnique({
         where: { email: payload.admin.email },
+        select: { id: true },
     });
     if (isEmailExists) {
         deleteFile(file);
@@ -42,6 +43,7 @@ const createAdminIntoDB = async (
 
     const isContactNumberExists = await prisma.admin.findUnique({
         where: { contactNumber: payload.admin.contactNumber },
+        select: { id: true },
     });
     if (isContactNumberExists) {
         deleteFile(file);
@@ -106,6 +108,7 @@ const createDoctorIntoDB = async (
 ) => {
     const isEmailExists = await prisma.doctor.findUnique({
         where: { email: payload.doctor.email },
+        select: { id: true },
     });
     if (isEmailExists) {
         deleteFile(file);
@@ -117,6 +120,7 @@ const createDoctorIntoDB = async (
 
     const isContactNumberExists = await prisma.doctor.findUnique({
         where: { contactNumber: payload.doctor.contactNumber },
+        select: { id: true },
     });
     if (isContactNumberExists) {
         deleteFile(file);
@@ -169,6 +173,7 @@ const createPatientIntoDB = async (
 ) => {
     const isEmailExists = await prisma.patient.findUnique({
         where: { email: payload.patient.email },
+        select: { id: true },
     });
     if (isEmailExists) {
         deleteFile(file);
@@ -180,6 +185,7 @@ const createPatientIntoDB = async (
 
     const isContactNumberExists = await prisma.patient.findUnique({
         where: { contactNumber: payload.patient.contactNumber },
+        select: { id: true },
     });
     if (isContactNumberExists) {
         deleteFile(file);
@@ -277,6 +283,7 @@ const changeProfileStatusIntoDB = async (
 ) => {
     const user = await prisma.user.findUnique({
         where: { id },
+        select: { id: true, status: true },
     });
     if (!user) {
         throw new ApiError(status.NOT_FOUND, 'User not found');

@@ -12,6 +12,7 @@ const createSpecialtiesIntoDB = async (
 ) => {
     const isSpecialtiesExists = await prisma.specialties.findUnique({
         where: { title: payload.title },
+        select: { id: true },
     });
     if (isSpecialtiesExists) {
         deleteFile(file);
@@ -40,6 +41,7 @@ const getAllSpecialtiesFromDB = async () => {
 const deleteSpecialtiesByIdFromDB = async (id: string) => {
     const isSpecialtiesExists = await prisma.specialties.findUnique({
         where: { id },
+        select: { id: true },
     });
     if (!isSpecialtiesExists) {
         throw new ApiError(status.NOT_FOUND, 'Specialties does not Exists');

@@ -1,5 +1,5 @@
 import status from 'http-status';
-import { Doctor, Prisma, UserStatus } from '../../../../generated/prisma';
+import { Doctor, Prisma } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
 import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
@@ -92,6 +92,7 @@ const getDoctorByIdFromDB = async (id: string) => {
 const deleteDoctorByIdFromDB = async (id: string) => {
     const doctor = await prisma.doctor.findUnique({
         where: { id, isDeleted: false },
+        select: { id: true },
     });
     if (!doctor) {
         throw new ApiError(status.NOT_FOUND, 'Doctor not found');
@@ -104,7 +105,7 @@ const deleteDoctorByIdFromDB = async (id: string) => {
 
         await tx.user.update({
             where: { email: doctorDeletedData.email },
-            data: { status: UserStatus.DELETED },
+            data: { status: 'DELETED' },
         });
 
         return doctorDeletedData;
@@ -116,6 +117,7 @@ const updateDoctorByIdIntoDB = async (id: string, payload: TDoctorUpdate) => {
     const { specialties, ...doctorData } = payload;
     const doctor = await prisma.doctor.findUnique({
         where: { id, isDeleted: false },
+        select: { id: true },
     });
     if (!doctor) {
         throw new ApiError(status.NOT_FOUND, 'Doctor not found');
