@@ -4,7 +4,7 @@ import { TQueryParams } from '../../interfaces';
 import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
-import buildSearchFilterConditions from '../../utils/buildConditions';
+import buildSearchFilterConditions from '../../utils/buildSearchFilterConditions';
 import { doctorSearchableFields } from './doctor.constant';
 import { TDoctorUpdate } from './doctor.interface';
 
@@ -38,9 +38,7 @@ const getAllDoctorsFromDB = async (
         doctorSearchableFields,
         filterData,
     );
-    if (searchFilterConditions) {
-        andConditions.push(...searchFilterConditions);
-    }
+    andConditions.push(...searchFilterConditions);
 
     andConditions.push({
         isDeleted: false,

@@ -16,7 +16,7 @@ import status from 'http-status';
 import deleteFile from '../../utils/deleteFile';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
-import buildSearchFilterConditions from '../../utils/buildConditions';
+import buildSearchFilterConditions from '../../utils/buildSearchFilterConditions';
 import { userSearchableFields } from './user.constant';
 import { TDecodedUser } from '../../interfaces/jwt.interface';
 import { TUpdateMyProfile } from './user.interface';
@@ -239,9 +239,7 @@ const getAllUsersFromDB = async (
         userSearchableFields,
         filterData,
     );
-    if (searchFilterConditions) {
-        andConditions.push(...searchFilterConditions);
-    }
+    andConditions.push(...searchFilterConditions);
 
     // check the condition
     // console.dir(andConditions, { depth: Infinity });

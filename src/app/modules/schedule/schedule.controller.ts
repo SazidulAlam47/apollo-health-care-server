@@ -2,6 +2,9 @@ import status from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { ScheduleServices } from './schedule.service';
+import { queryFilters } from '../../constants';
+import { scheduleFilters } from './schedule.constant';
+import pick from '../../utils/pick';
 
 const createSchedule = catchAsync(async (req, res) => {
     const result = await ScheduleServices.createScheduleIntoDB(req.body);
@@ -13,11 +16,14 @@ const createSchedule = catchAsync(async (req, res) => {
 });
 
 const getAllSchedules = catchAsync(async (req, res) => {
-    const result = await ScheduleServices.getAllSchedulesFromDB();
+    const filters = pick(req.query, scheduleFilters);
+    const query = pick(req.query, queryFilters);
+    const result = await ScheduleServices.getAllSchedulesFromDB(filters, query);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Schedules are fetched successfully',
-        data: result,
+        meta: result.meta,
+        data: result.data,
     });
 });
 

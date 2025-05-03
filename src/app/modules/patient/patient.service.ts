@@ -5,7 +5,7 @@ import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { patientSearchableFields } from './patient.constant';
-import buildSearchFilterConditions from '../../utils/buildConditions';
+import buildSearchFilterConditions from '../../utils/buildSearchFilterConditions';
 import { TPatientUpdate } from './patient.interface';
 
 const getAllPatientsFromDB = async (
@@ -21,9 +21,7 @@ const getAllPatientsFromDB = async (
         patientSearchableFields,
         filterData,
     );
-    if (searchFilterConditions) {
-        andConditions.push(...searchFilterConditions);
-    }
+    andConditions.push(...searchFilterConditions);
 
     andConditions.push({
         isDeleted: false,

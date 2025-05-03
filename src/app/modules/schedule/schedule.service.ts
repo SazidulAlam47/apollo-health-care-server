@@ -1,7 +1,9 @@
 import { addHours, addMinutes } from 'date-fns';
 import { TCreateSchedule } from './schedule.interface';
 import prisma from '../../utils/prisma';
-import { Schedule } from '../../../../generated/prisma';
+import { Prisma, Schedule } from '../../../../generated/prisma';
+import { TQueryParams } from '../../interfaces';
+import calculateOptions from '../../utils/calculateOptions';
 
 const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     const intervalMinutes = 30;
@@ -56,9 +58,34 @@ const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     return result;
 };
 
-const getAllSchedulesFromDB = async () => {
-    const result = await prisma.schedule.findMany();
-    return result;
+const getAllSchedulesFromDB = async (
+    filterData: Partial<Pick<Schedule, 'startDateTime' | 'endDateTime'>>,
+    query: TQueryParams,
+) => {
+    query.sortBy = 'startDateTime';
+    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(query);
+    const andConditions: Prisma.ScheduleWhereInput[] = [];
+
+    // filter with range
+    console.log({ filterData });
+
+    const whereCondition: Prisma.ScheduleWhereInput = { AND: andConditions };
+
+    const result = await prisma.schedule.findMany({
+        where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+    });
+
+    const totalData = await prisma.schedule.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
 };
 
 export const ScheduleServices = {

@@ -5,7 +5,7 @@ import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { adminSearchableFields } from './admin.constant';
-import buildSearchFilterConditions from '../../utils/buildConditions';
+import buildSearchFilterConditions from '../../utils/buildSearchFilterConditions';
 
 const getAllAdminsFromDB = async (
     filterData: Partial<Admin>,
@@ -20,9 +20,7 @@ const getAllAdminsFromDB = async (
         adminSearchableFields,
         filterData,
     );
-    if (searchFilterConditions) {
-        andConditions.push(...searchFilterConditions);
-    }
+    andConditions.push(...searchFilterConditions);
 
     andConditions.push({
         isDeleted: false,

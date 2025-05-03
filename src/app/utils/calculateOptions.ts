@@ -6,7 +6,11 @@ const calculateOptions = (options: TQueryParams) => {
     const skip = (page - 1) * limit;
 
     const sortBy = options.sortBy || 'createdAt';
-    const sortOrder = options.sortOrder || (options.sortBy ? 'asc' : 'desc');
+
+    let sortOrder = options.sortBy ? 'asc' : 'desc';
+    if (options.sortOrder === 'asc' || options.sortOrder === 'desc') {
+        sortOrder = options.sortOrder;
+    }
 
     const searchTerm = options.searchTerm;
 
