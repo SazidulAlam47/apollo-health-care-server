@@ -4,6 +4,7 @@ import prisma from '../../utils/prisma';
 import { Prisma, Schedule } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
+import { TDecodedUser } from '../../interfaces/jwt.interface';
 
 const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     const intervalMinutes = 30;
@@ -61,13 +62,49 @@ const createScheduleIntoDB = async (payload: TCreateSchedule) => {
 const getAllSchedulesFromDB = async (
     filterData: Partial<Pick<Schedule, 'startDateTime' | 'endDateTime'>>,
     query: TQueryParams,
+    decodedUser: TDecodedUser,
 ) => {
-    query.sortBy = 'startDateTime';
+    // default sort
+    query.sortBy = query.sortBy || 'startDateTime';
+    query.sortOrder = query.sortOrder || 'asc';
+
     const { page, limit, skip, sortBy, sortOrder } = calculateOptions(query);
     const andConditions: Prisma.ScheduleWhereInput[] = [];
 
     // filter with range
-    console.log({ filterData });
+    if (filterData.startDateTime && filterData.endDateTime) {
+        andConditions.push({
+            AND: {
+                startDateTime: {
+                    gte: filterData.startDateTime,
+                },
+                endDateTime: {
+                    lte: filterData.endDateTime,
+                },
+            },
+        });
+    }
+
+    const doctorSchedules = await prisma.doctorSchedules.findMany({
+        where: {
+            doctor: {
+                email: decodedUser.email,
+            },
+        },
+        select: {
+            scheduleId: true,
+        },
+    });
+
+    const doctorScheduleIds = doctorSchedules.map(
+        (doctorSchedule) => doctorSchedule.scheduleId,
+    );
+
+    if (doctorSchedules.length) {
+        andConditions.push({
+            id: { notIn: doctorScheduleIds },
+        });
+    }
 
     const whereCondition: Prisma.ScheduleWhereInput = { AND: andConditions };
 
