@@ -19,4 +19,10 @@ router.post(
     DoctorScheduleControllers.createDoctorSchedule,
 );
 
+router.delete(
+    '/:id',
+    auth('DOCTOR'),
+    DoctorScheduleControllers.deleteMySchedule,
+);
+
 export const DoctorScheduleRoutes = router;
