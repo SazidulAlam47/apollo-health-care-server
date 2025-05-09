@@ -74,17 +74,16 @@ const getAllSchedulesFromDB = async (
     // filter with range
     if (filterData.startDateTime && filterData.endDateTime) {
         andConditions.push({
-            AND: {
-                startDateTime: {
-                    gte: filterData.startDateTime,
-                },
-                endDateTime: {
-                    lte: filterData.endDateTime,
-                },
+            startDateTime: {
+                gte: filterData.startDateTime,
+            },
+            endDateTime: {
+                lte: filterData.endDateTime,
             },
         });
     }
 
+    // skip doctors already booked schedules
     const doctorSchedules = await prisma.doctorSchedules.findMany({
         where: {
             doctor: {

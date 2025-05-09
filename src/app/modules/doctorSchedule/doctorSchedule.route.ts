@@ -6,6 +6,12 @@ import { DoctorScheduleValidations } from './doctorSchedule.validation';
 
 const router = express.Router();
 
+router.get(
+    '/my-schedule',
+    auth('DOCTOR'),
+    DoctorScheduleControllers.getMySchedules,
+);
+
 router.post(
     '/',
     auth('DOCTOR'),
