@@ -6,7 +6,17 @@ import { ScheduleValidations } from './schedule.validation';
 
 const router = express.Router();
 
-router.get('/', auth('DOCTOR'), ScheduleControllers.getAllSchedules);
+router.get(
+    '/',
+    auth('DOCTOR', 'ADMIN', 'SUPER_ADMIN'),
+    ScheduleControllers.getAllSchedules,
+);
+
+router.get(
+    '/:id',
+    auth('DOCTOR', 'ADMIN', 'SUPER_ADMIN'),
+    ScheduleControllers.getScheduleById,
+);
 
 router.post(
     '/',

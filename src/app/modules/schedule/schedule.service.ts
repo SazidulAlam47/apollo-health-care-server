@@ -1,10 +1,12 @@
+import { TDecodedUser } from './../../interfaces/jwt.interface';
 import { addHours, addMinutes } from 'date-fns';
 import { TCreateSchedule } from './schedule.interface';
 import prisma from '../../utils/prisma';
 import { Prisma, Schedule } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
-import { TDecodedUser } from '../../interfaces/jwt.interface';
+import ApiError from '../../errors/ApiError';
+import status from 'http-status';
 
 const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     const intervalMinutes = 30;
@@ -124,7 +126,18 @@ const getAllSchedulesFromDB = async (
     return { data: result, meta: { page, limit, totalData, totalPage } };
 };
 
+const getScheduleByIdFromDB = async (id: string) => {
+    const result = await prisma.schedule.findUnique({
+        where: { id },
+    });
+    if (!result) {
+        throw new ApiError(status.NOT_FOUND, 'Schedule not found');
+    }
+    return result;
+};
+
 export const ScheduleServices = {
     createScheduleIntoDB,
     getAllSchedulesFromDB,
+    getScheduleByIdFromDB,
 };
