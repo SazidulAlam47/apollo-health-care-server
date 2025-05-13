@@ -48,8 +48,24 @@ const deleteMySchedule = catchAsync(async (req, res) => {
     });
 });
 
+const getAllDoctorSchedule = catchAsync(async (req, res) => {
+    const filters = pick(req.query, myScheduleFilters);
+    const query = pick(req.query, queryFilters);
+    const result = await DoctorScheduleServices.getAllDoctorSchedule(
+        filters,
+        query,
+    );
+    sendResponse(res, {
+        statusCode: status.OK,
+        message: 'All Doctor Schedule are fetched successfully',
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
 export const DoctorScheduleControllers = {
     createDoctorSchedule,
     getMySchedules,
     deleteMySchedule,
+    getAllDoctorSchedule,
 };
