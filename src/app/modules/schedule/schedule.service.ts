@@ -136,8 +136,24 @@ const getScheduleByIdFromDB = async (id: string) => {
     return result;
 };
 
+const deleteScheduleByIdFromDB = async (id: string) => {
+    const schedule = await prisma.schedule.findUnique({
+        where: { id },
+        select: { id: true },
+    });
+    if (!schedule) {
+        throw new ApiError(status.NOT_FOUND, 'Schedule not found');
+    }
+
+    const result = await prisma.schedule.delete({
+        where: { id },
+    });
+    return result;
+};
+
 export const ScheduleServices = {
     createScheduleIntoDB,
     getAllSchedulesFromDB,
     getScheduleByIdFromDB,
+    deleteScheduleByIdFromDB,
 };

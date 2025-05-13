@@ -25,4 +25,10 @@ router.post(
     ScheduleControllers.createSchedule,
 );
 
+router.delete(
+    '/:id',
+    auth('ADMIN', 'SUPER_ADMIN'),
+    ScheduleControllers.deleteScheduleById,
+);
+
 export const ScheduleRoutes = router;
