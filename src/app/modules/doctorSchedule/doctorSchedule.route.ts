@@ -6,7 +6,7 @@ import { DoctorScheduleValidations } from './doctorSchedule.validation';
 
 const router = express.Router();
 
-router.get('/', auth('ADMIN'), DoctorScheduleControllers.getAllDoctorSchedule);
+router.get('/', auth(), DoctorScheduleControllers.getAllDoctorSchedule);
 
 router.get(
     '/my-schedule',
