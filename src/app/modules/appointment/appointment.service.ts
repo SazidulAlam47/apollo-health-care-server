@@ -174,7 +174,44 @@ const getMyAppointments = async (
     return { data: result, meta: { page, limit, totalData, totalPage } };
 };
 
+const getAllAppointments = async (
+    filters: Partial<Appointment>,
+    query: TQueryParams,
+) => {
+    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(query);
+
+    const andConditions: Prisma.AppointmentWhereInput[] = [];
+
+    const filterConditions = buildFilterConditions(filters);
+    if (filterConditions) andConditions.push(filterConditions);
+
+    const whereCondition: Prisma.AppointmentWhereInput = { AND: andConditions };
+
+    const result = await prisma.appointment.findMany({
+        where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+        include: {
+            doctor: true,
+            patient: true,
+            schedule: true,
+            payment: true,
+        },
+    });
+
+    const totalData = await prisma.appointment.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
+};
+
 export const AppointmentServices = {
     createAppointment,
     getMyAppointments,
+    getAllAppointments,
 };

@@ -28,7 +28,19 @@ const getMyAppointments = catchAsync(async (req, res) => {
     );
     sendResponse(res, {
         statusCode: status.OK,
-        message: 'Appointment fetched successfully',
+        message: 'My Appointments fetched successfully',
+        meta: result.meta,
+        data: result.data,
+    });
+});
+
+const getAllAppointments = catchAsync(async (req, res) => {
+    const filters = pick(req.query, appointmentFilters);
+    const query = pick(req.query, queryFilters);
+    const result = await AppointmentServices.getAllAppointments(filters, query);
+    sendResponse(res, {
+        statusCode: status.OK,
+        message: 'All Appointments fetched successfully',
         meta: result.meta,
         data: result.data,
     });
@@ -37,4 +49,5 @@ const getMyAppointments = catchAsync(async (req, res) => {
 export const AppointmentControllers = {
     createAppointment,
     getMyAppointments,
+    getAllAppointments,
 };
