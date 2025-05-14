@@ -16,7 +16,7 @@ const createAppointment = async (
 
     const doctor = await prisma.doctor.findUnique({
         where: { id: payload.doctorId },
-        select: { id: true },
+        select: { id: true, appointmentFee: true },
     });
     if (!doctor) {
         throw new ApiError(status.NOT_FOUND, 'Doctor not found');
@@ -61,19 +61,15 @@ const createAppointment = async (
     }
 
     const videoCallingId = uuidv4();
+    const transactionId = 'tnx-' + uuidv4();
 
-    return await prisma.$transaction(async (tx) => {
-        const result = await tx.appointment.create({
+    const appointmentData = await prisma.$transaction(async (tx) => {
+        const appointment = await tx.appointment.create({
             data: {
                 patientId: patient.id,
                 doctorId: doctor.id,
                 scheduleId: schedule.id,
                 videoCallingId,
-            },
-            include: {
-                doctor: true,
-                schedule: true,
-                patient: true,
             },
         });
 
@@ -86,12 +82,32 @@ const createAppointment = async (
             },
             data: {
                 isBooked: true,
-                appointmentId: result.id,
+                appointmentId: appointment.id,
             },
         });
 
-        return result;
+        await tx.payment.create({
+            data: {
+                appointmentId: appointment.id,
+                amount: doctor.appointmentFee,
+                transactionId,
+            },
+        });
+
+        return appointment;
     });
+
+    const result = await prisma.appointment.findUnique({
+        where: { id: appointmentData.id },
+        include: {
+            doctor: true,
+            patient: true,
+            schedule: true,
+            payment: true,
+        },
+    });
+
+    return result;
 };
 
 export const AppointmentServices = {
