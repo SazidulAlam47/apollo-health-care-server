@@ -18,11 +18,13 @@ const test = (req: Request, res: Response) => {
     res.send({ message: 'Apollo Health Care Server is Running...' });
 };
 
+export const basePath = '/api/v1';
+
 // test route
 app.get('/', test);
 
 // application routes
-app.use('/api/v1', router);
+app.use(basePath, router);
 
 // global error handler
 app.use(globalErrorHandler);

@@ -19740,17 +19740,17 @@ export namespace Prisma {
   export type PaymentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     appointmentId?: string
+    transactionId?: string
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     amount?: FloatFilter<"Payment"> | number
-    transactionId?: StringFilter<"Payment"> | string
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     paymentGatewayData?: JsonNullableFilter<"Payment">
     createdAt?: DateTimeFilter<"Payment"> | Date | string
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
     appointment?: XOR<AppointmentScalarRelationFilter, AppointmentWhereInput>
-  }, "id" | "appointmentId">
+  }, "id" | "appointmentId" | "transactionId">
 
   export type PaymentOrderByWithAggregationInput = {
     id?: SortOrder
