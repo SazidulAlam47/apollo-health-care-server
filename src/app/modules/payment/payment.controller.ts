@@ -21,7 +21,19 @@ const validatePayment = catchAsync(async (req, res) => {
     res.redirect(`${config.client_url}/dashboard/payment-success`);
 });
 
+const paymentFailed = catchAsync(async (req, res) => {
+    await PaymentServices.paymentFailed(req.body);
+    res.redirect(`${config.client_url}/dashboard/payment-fail`);
+});
+
+const paymentCancelled = catchAsync(async (req, res) => {
+    await PaymentServices.paymentCancelled(req.body);
+    res.redirect(`${config.client_url}/dashboard/payment-cancel`);
+});
+
 export const PaymentControllers = {
     initPayment,
     validatePayment,
+    paymentFailed,
+    paymentCancelled,
 };

@@ -40,7 +40,7 @@ export interface SSLValidationPayload {
     store_amount: string;
     card_no: string;
     bank_tran_id: string;
-    status: string;
+    status: 'VALID' | 'FAILED' | 'CANCELLED' | 'UNATTEMPTED' | 'EXPIRED';
     tran_date: string;
     error: string;
     currency: string;

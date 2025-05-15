@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '../../utils/prisma';
 import ApiError from '../../errors/ApiError';
 import status from 'http-status';
@@ -5,7 +6,7 @@ import { SslServices } from '../ssl/ssl.service';
 import { SSLValidationPayload } from '../ssl/ssl.interface';
 
 const initPayment = async (appointmentId: string, baseUrl: string) => {
-    const paymentData = await prisma.payment.findUnique({
+    const paymentInfo = await prisma.payment.findUnique({
         where: {
             appointmentId,
         },
@@ -17,22 +18,24 @@ const initPayment = async (appointmentId: string, baseUrl: string) => {
             },
         },
     });
-    if (!paymentData) {
+
+    if (!paymentInfo) {
         throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
+    }
+    if (paymentInfo.status === 'PAID') {
+        throw new ApiError(status.BAD_REQUEST, 'Already Paid');
     }
 
     const data = {
-        total_amount: paymentData.amount,
-        tran_id: paymentData.transactionId,
-        cus_name: paymentData.appointment.patient.name,
-        cus_email: paymentData.appointment.patient.email,
-        cus_add1: paymentData.appointment.patient.address,
-        cus_phone: paymentData.appointment.patient.contactNumber,
+        total_amount: paymentInfo.amount,
+        tran_id: paymentInfo.transactionId,
+        cus_name: paymentInfo.appointment.patient.name,
+        cus_email: paymentInfo.appointment.patient.email,
+        cus_add1: paymentInfo.appointment.patient.address,
+        cus_phone: paymentInfo.appointment.patient.contactNumber,
     };
 
     const result = await SslServices.initPayment(data, baseUrl);
-
-    console.log({ paymentUlr: result.GatewayPageURL });
 
     return { paymentUlr: result.GatewayPageURL };
 };
@@ -70,7 +73,57 @@ const validatePayment = async (payload: SSLValidationPayload) => {
     });
 };
 
+const paymentFailed = async (payload: SSLValidationPayload) => {
+    if (payload.status !== 'FAILED' || !payload?.tran_id) {
+        throw new ApiError(status.BAD_REQUEST, 'Invalid Request');
+    }
+    const paymentInfo = await prisma.payment.findUnique({
+        where: {
+            transactionId: payload.tran_id,
+        },
+        select: { id: true, status: true },
+    });
+    if (!paymentInfo) {
+        throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
+    }
+    if (paymentInfo.status === 'PAID') {
+        throw new ApiError(status.BAD_REQUEST, 'Already Paid');
+    }
+    await prisma.payment.update({
+        where: { id: paymentInfo.id },
+        data: {
+            paymentGatewayData: payload as any,
+        },
+    });
+};
+
+const paymentCancelled = async (payload: SSLValidationPayload) => {
+    if (payload.status !== 'CANCELLED' || !payload?.tran_id) {
+        throw new ApiError(status.BAD_REQUEST, 'Invalid Request');
+    }
+    const paymentInfo = await prisma.payment.findUnique({
+        where: {
+            transactionId: payload.tran_id,
+        },
+        select: { id: true, status: true },
+    });
+    if (!paymentInfo) {
+        throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
+    }
+    if (paymentInfo.status === 'PAID') {
+        throw new ApiError(status.BAD_REQUEST, 'Already Paid');
+    }
+    await prisma.payment.update({
+        where: { id: paymentInfo.id },
+        data: {
+            paymentGatewayData: payload as any,
+        },
+    });
+};
+
 export const PaymentServices = {
     initPayment,
     validatePayment,
+    paymentFailed,
+    paymentCancelled,
 };
