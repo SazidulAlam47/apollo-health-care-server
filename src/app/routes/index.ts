@@ -8,6 +8,7 @@ import { PatientRoutes } from '../modules/patient/patient.route';
 import { ScheduleRoutes } from '../modules/schedule/schedule.route';
 import { DoctorScheduleRoutes } from '../modules/doctorSchedule/doctorSchedule.route';
 import { AppointmentRoutes } from '../modules/appointment/appointment.route';
+import { PaymentRoutes } from '../modules/payment/payment.route';
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
     {
         path: '/appointments',
         route: AppointmentRoutes,
+    },
+    {
+        path: '/payments',
+        route: PaymentRoutes,
     },
 ];
 
