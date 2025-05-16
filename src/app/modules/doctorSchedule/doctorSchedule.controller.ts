@@ -8,7 +8,7 @@ import { queryFilters } from '../../constants';
 import { myScheduleFilters } from './doctorSchedule.constant';
 
 const createDoctorSchedule = catchAsync(async (req, res) => {
-    const user = (req as CustomRequest).user;
+    const { user } = req as CustomRequest;
     const result = await DoctorScheduleServices.createDoctorSchedule(
         req.body,
         user,
@@ -23,7 +23,7 @@ const createDoctorSchedule = catchAsync(async (req, res) => {
 const getMySchedules = catchAsync(async (req, res) => {
     const filters = pick(req.query, myScheduleFilters);
     const query = pick(req.query, queryFilters);
-    const user = (req as CustomRequest).user;
+    const { user } = req as CustomRequest;
     const result = await DoctorScheduleServices.getMySchedules(
         filters,
         query,
@@ -38,7 +38,7 @@ const getMySchedules = catchAsync(async (req, res) => {
 });
 
 const deleteMySchedule = catchAsync(async (req, res) => {
-    const user = (req as CustomRequest).user;
+    const { user } = req as CustomRequest;
     const { id } = req.params;
     const result = await DoctorScheduleServices.deleteMySchedule(id, user);
     sendResponse(res, {

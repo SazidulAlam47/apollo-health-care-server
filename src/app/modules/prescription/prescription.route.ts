@@ -1,0 +1,16 @@
+import express from 'express';
+import { PrescriptionControllers } from './prescription.controller';
+import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
+import { PrescriptionValidations } from './prescription.validation';
+
+const router = express.Router();
+
+router.post(
+    '/',
+    auth('DOCTOR'),
+    validateRequest(PrescriptionValidations.createPrescription),
+    PrescriptionControllers.createPrescription,
+);
+
+export const PrescriptionRoutes = router;

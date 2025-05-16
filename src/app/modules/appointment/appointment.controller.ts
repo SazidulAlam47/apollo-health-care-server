@@ -8,7 +8,7 @@ import pick from '../../utils/pick';
 import { appointmentFilters } from './appointment.constant';
 
 const createAppointment = catchAsync(async (req, res) => {
-    const user = (req as CustomRequest).user;
+    const { user } = req as CustomRequest;
     const result = await AppointmentServices.createAppointment(req.body, user);
     sendResponse(res, {
         statusCode: status.CREATED,
@@ -20,7 +20,7 @@ const createAppointment = catchAsync(async (req, res) => {
 const getMyAppointments = catchAsync(async (req, res) => {
     const filters = pick(req.query, appointmentFilters);
     const query = pick(req.query, queryFilters);
-    const user = (req as CustomRequest).user;
+    const { user } = req as CustomRequest;
     const result = await AppointmentServices.getMyAppointments(
         filters,
         query,
@@ -49,7 +49,7 @@ const getAllAppointments = catchAsync(async (req, res) => {
 const changeAppointmentStatus = catchAsync(async (req, res) => {
     const { id } = req.params;
     const { status: appointmentStatus } = req.body;
-    const user = (req as CustomRequest).user;
+    const { user } = req as CustomRequest;
     const result = await AppointmentServices.changeAppointmentStatus(
         id,
         appointmentStatus,
