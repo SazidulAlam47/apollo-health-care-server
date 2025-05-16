@@ -7,3 +7,10 @@ export type TCreateAppointmentPayload = z.infer<
 >;
 
 export type TAppointmentFilterKeys = keyof Appointment;
+
+type TChangeAppointmentStatusPayload = z.infer<
+    typeof AppointmentValidations.changeAppointmentStatus
+>;
+
+export type TChangeAppointmentStatus =
+    TChangeAppointmentStatusPayload['status'];

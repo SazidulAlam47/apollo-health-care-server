@@ -3,10 +3,17 @@
 import { ErrorRequestHandler } from 'express';
 import status from 'http-status';
 import config from '../config';
+import { ZodError } from 'zod';
+import { TErrorResponse } from '../interfaces';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    const statusCode: number = err?.statusCode || status.INTERNAL_SERVER_ERROR;
-    const message: string = err?.message || 'Something went wrong';
+    let statusCode: number = err?.statusCode || status.INTERNAL_SERVER_ERROR;
+    let message: string = err?.message || 'Something went wrong';
+
+    if (err instanceof ZodError) {
+        statusCode = status.BAD_REQUEST;
+        message = 'Validation Error';
+    }
 
     res.status(statusCode).json({
         success: false,

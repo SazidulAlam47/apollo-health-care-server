@@ -2,7 +2,10 @@ import status from 'http-status';
 import ApiError from '../../errors/ApiError';
 import { TDecodedUser } from '../../interfaces/jwt.interface';
 import prisma from '../../utils/prisma';
-import { TCreateAppointmentPayload } from './appointment.interface';
+import {
+    TChangeAppointmentStatus,
+    TCreateAppointmentPayload,
+} from './appointment.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { Appointment, Prisma } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
@@ -210,8 +213,82 @@ const getAllAppointments = async (
     return { data: result, meta: { page, limit, totalData, totalPage } };
 };
 
+const changeAppointmentStatus = async (
+    appointmentId: string,
+    appointmentStatus: TChangeAppointmentStatus,
+    decodedUser: TDecodedUser,
+) => {
+    const appointment = await prisma.appointment.findUnique({
+        where: { id: appointmentId },
+        select: {
+            id: true,
+            status: true,
+            paymentStatus: true,
+            doctor:
+                decodedUser.role === 'DOCTOR'
+                    ? {
+                          select: {
+                              email: true,
+                          },
+                      }
+                    : false,
+        },
+    });
+    // check appointment is exists
+    if (!appointment) {
+        throw new ApiError(status.NOT_FOUND, 'Appointment not found');
+    }
+    // check doctor is updating his/her appointment
+    if (
+        decodedUser.role === 'DOCTOR' &&
+        decodedUser.email !== appointment.doctor.email
+    ) {
+        throw new ApiError(status.FORBIDDEN, 'Forbidden Access');
+    }
+    // check if the appointment is already COMPLETED or CANCELED
+    // or current and input status is same
+    if (
+        appointment.status === 'COMPLETED' ||
+        appointment.status === 'CANCELED' ||
+        appointment.status === appointmentStatus
+    ) {
+        throw new ApiError(
+            status.CONFLICT,
+            `Appointment is already ${appointment.status}`,
+        );
+    }
+    // check if the appointment is PAID
+    if (appointment.paymentStatus !== 'PAID') {
+        throw new ApiError(status.BAD_REQUEST, 'Appointment is Unpaid');
+    }
+
+    // Directly SCHEDULED to COMPLETED is not allowed
+    if (
+        appointment.status === 'SCHEDULED' &&
+        appointmentStatus === 'COMPLETED'
+    ) {
+        throw new ApiError(
+            status.CONFLICT,
+            'Directly SCHEDULED to COMPLETED is not allowed',
+        );
+    }
+
+    // update in database
+    const result = await prisma.appointment.update({
+        where: {
+            id: appointment.id,
+        },
+        data: {
+            status: appointmentStatus,
+        },
+    });
+
+    return result;
+};
+
 export const AppointmentServices = {
     createAppointment,
     getMyAppointments,
     getAllAppointments,
+    changeAppointmentStatus,
 };
