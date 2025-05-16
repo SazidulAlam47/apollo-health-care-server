@@ -63,7 +63,7 @@ const createAppointment = async (
     if (isPatientHaveAppointment) {
         throw new ApiError(
             status.CONFLICT,
-            'You already have another appointment on that time',
+            'You already have an appointment scheduled at that time',
         );
     }
 
