@@ -23,7 +23,7 @@ const createAppointment = async (
 
     const doctor = await prisma.doctor.findUnique({
         where: { id: payload.doctorId },
-        select: { id: true, appointmentFee: true },
+        select: { id: true, appointmentFee: true, name: true },
     });
     if (!doctor) {
         throw new ApiError(status.NOT_FOUND, 'Doctor not found');
@@ -35,17 +35,6 @@ const createAppointment = async (
     });
     if (!schedule) {
         throw new ApiError(status.NOT_FOUND, 'Schedule not found');
-    }
-
-    const isAppointmentExists = await prisma.appointment.findFirst({
-        where: {
-            patientId: patient.id,
-            doctorId: doctor.id,
-            scheduleId: schedule.id,
-        },
-    });
-    if (isAppointmentExists) {
-        throw new ApiError(status.CONFLICT, 'Appointment is already booked');
     }
 
     const doctorSchedule = await prisma.doctorSchedules.findUnique({
@@ -60,10 +49,39 @@ const createAppointment = async (
         throw new ApiError(status.NOT_FOUND, 'Doctor-Schedule not found');
     }
 
-    if (doctorSchedule.isBooked) {
+    // check the patient have another appointment at the same time
+    const isPatientHaveAppointment = await prisma.appointment.findFirst({
+        where: {
+            patientId: patient.id,
+            scheduleId: schedule.id,
+            status: {
+                not: 'CANCELED',
+            },
+        },
+    });
+
+    if (isPatientHaveAppointment) {
         throw new ApiError(
             status.CONFLICT,
-            'Doctor is not available on this Schedule',
+            'You already have another appointment on that time',
+        );
+    }
+
+    // check the doctor have another appointment at the same time
+    const isDoctorHaveAppointment = await prisma.appointment.findFirst({
+        where: {
+            doctorId: doctor.id,
+            scheduleId: schedule.id,
+            status: {
+                not: 'CANCELED',
+            },
+        },
+    });
+
+    if (isDoctorHaveAppointment || doctorSchedule.isBooked) {
+        throw new ApiError(
+            status.CONFLICT,
+            `${doctor.name} is not available on this Schedule`,
         );
     }
 
@@ -286,9 +304,54 @@ const changeAppointmentStatus = async (
     return result;
 };
 
+const cancelUnpaidAppointments = async () => {
+    const minute = 30;
+    const thirtyMinAgo = new Date(Date.now() - minute * 60 * 1000);
+
+    const unpaidAppointments = await prisma.appointment.findMany({
+        where: {
+            paymentStatus: 'UNPAID',
+            createdAt: {
+                lte: thirtyMinAgo,
+            },
+        },
+        select: { id: true },
+    });
+
+    const appointmentIdsToCancel = unpaidAppointments.map(
+        (appointment) => appointment.id,
+    );
+
+    await prisma.$transaction(async (tx) => {
+        await tx.appointment.updateMany({
+            where: {
+                id: {
+                    in: appointmentIdsToCancel,
+                },
+            },
+            data: {
+                status: 'CANCELED',
+            },
+        });
+
+        await tx.doctorSchedules.updateMany({
+            where: {
+                appointmentId: {
+                    in: appointmentIdsToCancel,
+                },
+            },
+            data: {
+                isBooked: false,
+                appointmentId: null,
+            },
+        });
+    });
+};
+
 export const AppointmentServices = {
     createAppointment,
     getMyAppointments,
     getAllAppointments,
     changeAppointmentStatus,
+    cancelUnpaidAppointments,
 };

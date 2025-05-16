@@ -23,7 +23,13 @@ const initPayment = async (appointmentId: string, baseUrl: string) => {
         throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
     }
     if (paymentInfo.status === 'PAID') {
-        throw new ApiError(status.BAD_REQUEST, 'Already Paid');
+        throw new ApiError(status.BAD_REQUEST, 'Appointment is already Paid');
+    }
+    if (paymentInfo.appointment.status === 'CANCELED') {
+        throw new ApiError(
+            status.BAD_REQUEST,
+            'Appointment is already CANCELED',
+        );
     }
 
     const data = {

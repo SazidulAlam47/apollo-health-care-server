@@ -19601,8 +19601,6 @@ export namespace Prisma {
 
   export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    doctorId_scheduleId?: AppointmentDoctorIdScheduleIdCompoundUniqueInput
-    patientId_scheduleId?: AppointmentPatientIdScheduleIdCompoundUniqueInput
     AND?: AppointmentWhereInput | AppointmentWhereInput[]
     OR?: AppointmentWhereInput[]
     NOT?: AppointmentWhereInput | AppointmentWhereInput[]
@@ -19621,7 +19619,7 @@ export namespace Prisma {
     payment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
     prescription?: XOR<PrescriptionNullableScalarRelationFilter, PrescriptionWhereInput> | null
     review?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
-  }, "id" | "doctorId_scheduleId" | "patientId_scheduleId">
+  }, "id">
 
   export type AppointmentOrderByWithAggregationInput = {
     id?: SortOrder
@@ -21860,16 +21858,6 @@ export namespace Prisma {
   export type ReviewNullableScalarRelationFilter = {
     is?: ReviewWhereInput | null
     isNot?: ReviewWhereInput | null
-  }
-
-  export type AppointmentDoctorIdScheduleIdCompoundUniqueInput = {
-    doctorId: string
-    scheduleId: string
-  }
-
-  export type AppointmentPatientIdScheduleIdCompoundUniqueInput = {
-    patientId: string
-    scheduleId: string
   }
 
   export type AppointmentCountOrderByAggregateInput = {

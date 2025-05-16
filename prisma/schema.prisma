@@ -220,8 +220,6 @@ model Appointment {
   prescription    Prescription?
   review          Review?
 
-  @@unique([doctorId, scheduleId])
-  @@unique([patientId, scheduleId])
   @@map("appointments")
 }
 
