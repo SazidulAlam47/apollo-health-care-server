@@ -6,6 +6,12 @@ import { PrescriptionValidations } from './prescription.validation';
 
 const router = express.Router();
 
+router.get(
+    '/my-prescriptions',
+    auth('PATIENT'),
+    PrescriptionControllers.patientPrescriptions,
+);
+
 router.post(
     '/',
     auth('DOCTOR'),

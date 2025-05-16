@@ -3,6 +3,9 @@ import ApiError from '../../errors/ApiError';
 import { TDecodedUser } from '../../interfaces/jwt.interface';
 import prisma from '../../utils/prisma';
 import { TCreatePrescriptionPayload } from './prescription.interface';
+import { TQueryParams } from '../../interfaces';
+import calculateOptions from '../../utils/calculateOptions';
+import { Prisma } from '../../../../generated/prisma';
 
 const createPrescription = async (
     payload: TCreatePrescriptionPayload,
@@ -59,6 +62,48 @@ const createPrescription = async (
     return result;
 };
 
+const patientPrescriptions = async (
+    query: TQueryParams,
+    decodedUser: TDecodedUser,
+) => {
+    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(query);
+
+    const andConditions: Prisma.PrescriptionWhereInput[] = [];
+
+    // only show patients own prescriptions
+    andConditions.push({
+        patient: {
+            email: decodedUser.email,
+        },
+    });
+
+    const whereCondition: Prisma.PrescriptionWhereInput = {
+        AND: andConditions,
+    };
+
+    const result = await prisma.prescription.findMany({
+        where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+        include: {
+            doctor: true,
+            patient: true,
+            appointment: true,
+        },
+    });
+
+    const totalData = await prisma.prescription.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
+};
+
 export const PrescriptionServices = {
     createPrescription,
+    patientPrescriptions,
 };
