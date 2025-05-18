@@ -220,8 +220,6 @@ model Appointment {
   prescription    Prescription?
   review          Review?
 
-  @@unique([doctorId, scheduleId])
-  @@unique([patientId, scheduleId])
   @@map("appointments")
 }
 
@@ -276,7 +274,7 @@ model Review {
   doctor        Doctor      @relation(fields: [doctorId], references: [id])
   appointmentId String      @unique
   appointment   Appointment @relation(fields: [appointmentId], references: [id])
-  rating        Float       @default(1)
+  rating        Float
   comment       String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt

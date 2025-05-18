@@ -506,8 +506,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.7.0
-   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+   * Prisma Client JS version: 6.8.1
+   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
    */
   export type PrismaVersion = {
     client: string
@@ -21022,7 +21022,7 @@ export namespace Prisma {
 
   export type ReviewCreateInput = {
     id?: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21036,7 +21036,7 @@ export namespace Prisma {
     patientId: string
     doctorId: string
     appointmentId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21069,7 +21069,7 @@ export namespace Prisma {
     patientId: string
     doctorId: string
     appointmentId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24032,7 +24032,7 @@ export namespace Prisma {
 
   export type ReviewCreateWithoutDoctorInput = {
     id?: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24044,7 +24044,7 @@ export namespace Prisma {
     id?: string
     patientId: string
     appointmentId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24416,7 +24416,7 @@ export namespace Prisma {
 
   export type ReviewCreateWithoutPatientInput = {
     id?: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24428,7 +24428,7 @@ export namespace Prisma {
     id?: string
     doctorId: string
     appointmentId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25234,7 +25234,7 @@ export namespace Prisma {
 
   export type ReviewCreateWithoutAppointmentInput = {
     id?: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25246,7 +25246,7 @@ export namespace Prisma {
     id?: string
     patientId: string
     doctorId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26391,7 +26391,7 @@ export namespace Prisma {
     id?: string
     patientId: string
     appointmentId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26561,7 +26561,7 @@ export namespace Prisma {
     id?: string
     doctorId: string
     appointmentId: string
-    rating?: number
+    rating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
