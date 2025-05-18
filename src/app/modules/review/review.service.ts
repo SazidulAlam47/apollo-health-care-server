@@ -3,6 +3,10 @@ import ApiError from '../../errors/ApiError';
 import { TDecodedUser } from '../../interfaces/jwt.interface';
 import prisma from '../../utils/prisma';
 import { TCreateReviewPayload } from './review.interface';
+import { TQueryParams } from '../../interfaces';
+import calculateOptions from '../../utils/calculateOptions';
+import { Prisma } from '../../../../generated/prisma';
+import { reviewSearchableFields } from './review.constant';
 
 const createReview = async (
     payload: TCreateReviewPayload,
@@ -59,6 +63,74 @@ const createReview = async (
     return result;
 };
 
+const getAllReviews = async (
+    filters: { doctorEmail?: string; patientEmail?: string },
+    query: TQueryParams,
+) => {
+    const { page, limit, skip, sortBy, sortOrder, searchTerm } =
+        calculateOptions(query);
+
+    const andConditions: Prisma.ReviewWhereInput[] = [];
+
+    // filter doctor email
+    if (filters?.doctorEmail) {
+        andConditions.push({
+            doctor: {
+                email: filters.doctorEmail,
+            },
+        });
+    }
+
+    // filter patient email
+    if (filters?.patientEmail) {
+        andConditions.push({
+            patient: {
+                email: filters.patientEmail,
+            },
+        });
+    }
+
+    // search
+    if (searchTerm) {
+        andConditions.push({
+            OR: reviewSearchableFields.map(({ relation, field }) => ({
+                [relation]: {
+                    [field]: {
+                        contains: searchTerm,
+                        mode: 'insensitive',
+                    },
+                },
+            })),
+        });
+    }
+
+    // console.dir(andConditions, { depth: Infinity });
+
+    const whereCondition: Prisma.ReviewWhereInput = { AND: andConditions };
+
+    const result = await prisma.review.findMany({
+        where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+        include: {
+            patient: true,
+            doctor: true,
+            appointment: true,
+        },
+    });
+
+    const totalData = await prisma.review.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
+};
+
 export const ReviewServices = {
     createReview,
+    getAllReviews,
 };
