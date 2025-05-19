@@ -7,9 +7,15 @@ import { PrescriptionValidations } from './prescription.validation';
 const router = express.Router();
 
 router.get(
+    '/',
+    auth('ADMIN', 'SUPER_ADMIN'),
+    PrescriptionControllers.getAllPrescriptions,
+);
+
+router.get(
     '/my-prescriptions',
     auth('PATIENT'),
-    PrescriptionControllers.patientPrescriptions,
+    PrescriptionControllers.getPatientPrescriptions,
 );
 
 router.post(

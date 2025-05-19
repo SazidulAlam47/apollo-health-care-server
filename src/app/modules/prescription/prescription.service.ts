@@ -6,6 +6,10 @@ import { TCreatePrescriptionPayload } from './prescription.interface';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
 import { Prisma } from '../../../../generated/prisma';
+import {
+    prescriptionPatientSearchableFields,
+    prescriptionSearchableFields,
+} from './prescription.constant';
 
 const createPrescription = async (
     payload: TCreatePrescriptionPayload,
@@ -62,11 +66,13 @@ const createPrescription = async (
     return result;
 };
 
-const patientPrescriptions = async (
+const getPatientPrescriptions = async (
+    filters: { doctorEmail?: string },
     query: TQueryParams,
     decodedUser: TDecodedUser,
 ) => {
-    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(query);
+    const { page, limit, skip, sortBy, sortOrder, searchTerm } =
+        calculateOptions(query);
 
     const andConditions: Prisma.PrescriptionWhereInput[] = [];
 
@@ -76,6 +82,102 @@ const patientPrescriptions = async (
             email: decodedUser.email,
         },
     });
+
+    // filter doctor email
+    if (filters?.doctorEmail) {
+        andConditions.push({
+            doctor: {
+                email: filters.doctorEmail,
+            },
+        });
+    }
+
+    // search
+    if (searchTerm) {
+        andConditions.push({
+            OR: prescriptionPatientSearchableFields.map(
+                ({ relation, field }) => ({
+                    [relation]: {
+                        [field]: {
+                            contains: searchTerm,
+                            mode: 'insensitive',
+                        },
+                    },
+                }),
+            ),
+        });
+    }
+
+    // console.dir(andConditions, { depth: Infinity });
+
+    const whereCondition: Prisma.PrescriptionWhereInput = {
+        AND: andConditions,
+    };
+
+    const result = await prisma.prescription.findMany({
+        where: whereCondition,
+        skip: skip,
+        take: limit,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+        include: {
+            doctor: true,
+            patient: true,
+            appointment: true,
+        },
+    });
+
+    const totalData = await prisma.prescription.count({
+        where: whereCondition,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
+};
+
+const getAllPrescriptions = async (
+    filters: { doctorEmail?: string; patientEmail?: string },
+    query: TQueryParams,
+) => {
+    const { page, limit, skip, sortBy, sortOrder, searchTerm } =
+        calculateOptions(query);
+
+    const andConditions: Prisma.PrescriptionWhereInput[] = [];
+
+    // filter doctor email
+    if (filters?.doctorEmail) {
+        andConditions.push({
+            doctor: {
+                email: filters.doctorEmail,
+            },
+        });
+    }
+
+    // filter patient email
+    if (filters?.patientEmail) {
+        andConditions.push({
+            patient: {
+                email: filters.patientEmail,
+            },
+        });
+    }
+
+    // search
+    if (searchTerm) {
+        andConditions.push({
+            OR: prescriptionSearchableFields.map(({ relation, field }) => ({
+                [relation]: {
+                    [field]: {
+                        contains: searchTerm,
+                        mode: 'insensitive',
+                    },
+                },
+            })),
+        });
+    }
+
+    // console.dir(andConditions, { depth: Infinity });
 
     const whereCondition: Prisma.PrescriptionWhereInput = {
         AND: andConditions,
@@ -105,5 +207,6 @@ const patientPrescriptions = async (
 
 export const PrescriptionServices = {
     createPrescription,
-    patientPrescriptions,
+    getPatientPrescriptions,
+    getAllPrescriptions,
 };
