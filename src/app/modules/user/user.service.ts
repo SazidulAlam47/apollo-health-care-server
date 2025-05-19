@@ -1,15 +1,11 @@
 import prisma from '../../utils/prisma';
 import {
-    Admin,
-    Doctor,
-    Patient,
     Prisma,
     User,
     UserRole,
     UserStatus,
 } from '../../../../generated/prisma';
 import { hashPassword } from '../../utils/bcrypt';
-import type { Express } from 'express';
 import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
 import ApiError from '../../errors/ApiError';
 import status from 'http-status';
@@ -19,16 +15,16 @@ import calculateOptions from '../../utils/calculateOptions';
 import buildSearchFilterConditions from '../../utils/buildSearchFilterConditions';
 import { userSearchableFields } from './user.constant';
 import { TDecodedUser } from '../../interfaces/jwt.interface';
-import { TUpdateMyProfile } from './user.interface';
+import {
+    TCreateAdminPayload,
+    TCreateDoctorPayload,
+    TCreatePatientPayload,
+    TFile,
+    TUpdateMyProfile,
+} from './user.interface';
 import pick from '../../utils/pick';
 
-const createAdminIntoDB = async (
-    payload: {
-        password: string;
-        admin: Pick<Admin, 'name' | 'email' | 'contactNumber' | 'profilePhoto'>;
-    },
-    file: Express.Multer.File | undefined,
-) => {
+const createAdminIntoDB = async (payload: TCreateAdminPayload, file: TFile) => {
     const isEmailExists = await prisma.admin.findUnique({
         where: { email: payload.admin.email },
         select: { id: true },
@@ -85,26 +81,8 @@ const createAdminIntoDB = async (
 };
 
 const createDoctorIntoDB = async (
-    payload: {
-        password: string;
-        doctor: Pick<
-            Doctor,
-            | 'name'
-            | 'email'
-            | 'contactNumber'
-            | 'profilePhoto'
-            | 'address'
-            | 'registrationNumber'
-            | 'experience'
-            | 'gender'
-            | 'appointmentFee'
-            | 'qualification'
-            | 'currentWorkingPlace'
-            | 'designation'
-            | 'averageRating'
-        >;
-    },
-    file: Express.Multer.File | undefined,
+    payload: TCreateDoctorPayload,
+    file: TFile,
 ) => {
     const isEmailExists = await prisma.doctor.findUnique({
         where: { email: payload.doctor.email },
@@ -162,14 +140,8 @@ const createDoctorIntoDB = async (
 };
 
 const createPatientIntoDB = async (
-    payload: {
-        password: string;
-        patient: Pick<
-            Patient,
-            'name' | 'email' | 'contactNumber' | 'profilePhoto' | 'address'
-        >;
-    },
-    file: Express.Multer.File | undefined,
+    payload: TCreatePatientPayload,
+    file: TFile,
 ) => {
     const isEmailExists = await prisma.patient.findUnique({
         where: { email: payload.patient.email },
@@ -329,7 +301,7 @@ const getMyProfileFromDB = async (userData: TDecodedUser) => {
 const updateMyProfileIntoDB = async (
     userData: TDecodedUser,
     payload: TUpdateMyProfile,
-    file: Express.Multer.File | undefined,
+    file: TFile,
 ) => {
     const user = await prisma.user.findUnique({
         where: { email: userData.email, status: 'ACTIVE' },

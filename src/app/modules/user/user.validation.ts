@@ -24,7 +24,6 @@ const createDoctor = z.object({
         qualification: z.string(),
         currentWorkingPlace: z.string(),
         designation: z.string(),
-        averageRating: z.number(),
     }),
 });
 

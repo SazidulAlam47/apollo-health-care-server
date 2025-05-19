@@ -50,17 +50,32 @@ const createReview = async (
         );
     }
 
-    const result = await prisma.review.create({
-        data: {
-            patientId: appointment.patientId,
-            doctorId: appointment.doctorId,
-            appointmentId: appointment.id,
-            rating: payload.rating,
-            comment: payload.comment,
-        },
-    });
+    return await prisma.$transaction(async (tx) => {
+        const result = await tx.review.create({
+            data: {
+                patientId: appointment.patientId,
+                doctorId: appointment.doctorId,
+                appointmentId: appointment.id,
+                rating: payload.rating,
+                comment: payload.comment,
+            },
+        });
 
-    return result;
+        const avgRating = await tx.review.aggregate({
+            _avg: {
+                rating: true,
+            },
+        });
+
+        await tx.doctor.update({
+            where: { id: appointment.doctorId },
+            data: {
+                averageRating: avgRating._avg.rating || 0.0,
+            },
+        });
+
+        return result;
+    });
 };
 
 const getAllReviews = async (
