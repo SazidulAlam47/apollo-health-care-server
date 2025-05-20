@@ -11,13 +11,10 @@ const createDoctorSchedule = async (
     payload: TCreateDoctorSchedulePayload,
     decodedUser: TDecodedUser,
 ) => {
-    const doctor = await prisma.doctor.findUnique({
+    const doctor = await prisma.doctor.findUniqueOrThrow({
         where: { email: decodedUser.email },
         select: { id: true },
     });
-    if (!doctor) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor not found');
-    }
 
     const doctorSchedules = payload.scheduleIds.map((scheduleId) => ({
         doctorId: doctor.id,
@@ -114,7 +111,7 @@ const deleteMySchedule = async (
         select: { id: true },
     });
 
-    const doctorSchedule = await prisma.doctorSchedules.findUnique({
+    const doctorSchedule = await prisma.doctorSchedules.findUniqueOrThrow({
         where: {
             doctorId_scheduleId: {
                 scheduleId,
@@ -122,9 +119,7 @@ const deleteMySchedule = async (
             },
         },
     });
-    if (!doctorSchedule) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor Schedule not found');
-    }
+
     if (doctorSchedule.isBooked) {
         throw new ApiError(
             status.BAD_REQUEST,

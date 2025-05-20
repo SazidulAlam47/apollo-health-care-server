@@ -39,13 +39,11 @@ const getAllSpecialtiesFromDB = async () => {
 };
 
 const deleteSpecialtiesByIdFromDB = async (id: string) => {
-    const isSpecialtiesExists = await prisma.specialties.findUnique({
+    await prisma.specialties.findUniqueOrThrow({
         where: { id },
         select: { id: true },
     });
-    if (!isSpecialtiesExists) {
-        throw new ApiError(status.NOT_FOUND, 'Specialties does not Exists');
-    }
+
     const result = await prisma.specialties.delete({
         where: { id },
     });

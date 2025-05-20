@@ -251,13 +251,11 @@ const changeProfileStatusIntoDB = async (
     id: string,
     userStatus: UserStatus,
 ) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: { id },
         select: { id: true, status: true },
     });
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not found');
-    }
+
     if (user.status === userStatus) {
         throw new ApiError(
             status.BAD_REQUEST,
@@ -274,7 +272,7 @@ const changeProfileStatusIntoDB = async (
 };
 
 const getMyProfileFromDB = async (userData: TDecodedUser) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: { email: userData.email, status: 'ACTIVE' },
         select: {
             id: true,
@@ -289,9 +287,6 @@ const getMyProfileFromDB = async (userData: TDecodedUser) => {
             patient: userData.role === 'PATIENT',
         },
     });
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not found');
-    }
 
     const { admin, doctor, patient, ...userInfo } = user;
 

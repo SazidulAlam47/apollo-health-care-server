@@ -23,7 +23,7 @@ const createReview = async (
         );
     }
 
-    const appointment = await prisma.appointment.findUnique({
+    const appointment = await prisma.appointment.findUniqueOrThrow({
         where: { id: payload.appointmentId },
         select: {
             id: true,
@@ -35,9 +35,6 @@ const createReview = async (
             },
         },
     });
-    if (!appointment) {
-        throw new ApiError(status.NOT_FOUND, 'Appointment not found');
-    }
 
     if (appointment.patient.email !== decodedUser.email) {
         throw new ApiError(status.FORBIDDEN, 'Forbidden access');

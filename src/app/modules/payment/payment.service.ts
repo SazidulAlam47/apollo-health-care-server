@@ -6,7 +6,7 @@ import { SslServices } from '../ssl/ssl.service';
 import { SSLValidationPayload } from '../ssl/ssl.interface';
 
 const initPayment = async (appointmentId: string, baseUrl: string) => {
-    const paymentInfo = await prisma.payment.findUnique({
+    const paymentInfo = await prisma.payment.findUniqueOrThrow({
         where: {
             appointmentId,
         },
@@ -19,9 +19,6 @@ const initPayment = async (appointmentId: string, baseUrl: string) => {
         },
     });
 
-    if (!paymentInfo) {
-        throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
-    }
     if (paymentInfo.status === 'PAID') {
         throw new ApiError(status.BAD_REQUEST, 'Appointment is already Paid');
     }
@@ -83,15 +80,13 @@ const paymentFailed = async (payload: SSLValidationPayload) => {
     if (payload.status !== 'FAILED' || !payload?.tran_id) {
         throw new ApiError(status.BAD_REQUEST, 'Invalid Request');
     }
-    const paymentInfo = await prisma.payment.findUnique({
+    const paymentInfo = await prisma.payment.findUniqueOrThrow({
         where: {
             transactionId: payload.tran_id,
         },
         select: { id: true, status: true },
     });
-    if (!paymentInfo) {
-        throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
-    }
+
     if (paymentInfo.status === 'PAID') {
         throw new ApiError(status.BAD_REQUEST, 'Already Paid');
     }
@@ -107,15 +102,13 @@ const paymentCancelled = async (payload: SSLValidationPayload) => {
     if (payload.status !== 'CANCELLED' || !payload?.tran_id) {
         throw new ApiError(status.BAD_REQUEST, 'Invalid Request');
     }
-    const paymentInfo = await prisma.payment.findUnique({
+    const paymentInfo = await prisma.payment.findUniqueOrThrow({
         where: {
             transactionId: payload.tran_id,
         },
         select: { id: true, status: true },
     });
-    if (!paymentInfo) {
-        throw new ApiError(status.NOT_FOUND, 'Payment Data not found');
-    }
+
     if (paymentInfo.status === 'PAID') {
         throw new ApiError(status.BAD_REQUEST, 'Already Paid');
     }

@@ -15,7 +15,7 @@ const createPrescription = async (
     payload: TCreatePrescriptionPayload,
     decodedUser: TDecodedUser,
 ) => {
-    const appointment = await prisma.appointment.findUnique({
+    const appointment = await prisma.appointment.findUniqueOrThrow({
         where: { id: payload.appointmentId },
         select: {
             id: true,
@@ -29,9 +29,7 @@ const createPrescription = async (
             },
         },
     });
-    if (!appointment) {
-        throw new ApiError(status.NOT_FOUND, 'Appointment not found');
-    }
+
     if (appointment.status !== 'COMPLETED') {
         throw new ApiError(status.BAD_REQUEST, 'Appointment is not COMPLETED');
     }

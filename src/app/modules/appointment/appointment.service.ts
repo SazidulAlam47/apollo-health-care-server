@@ -21,23 +21,17 @@ const createAppointment = async (
         select: { id: true },
     });
 
-    const doctor = await prisma.doctor.findUnique({
+    const doctor = await prisma.doctor.findUniqueOrThrow({
         where: { id: payload.doctorId },
         select: { id: true, appointmentFee: true, name: true },
     });
-    if (!doctor) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor not found');
-    }
 
-    const schedule = await prisma.schedule.findUnique({
+    const schedule = await prisma.schedule.findUniqueOrThrow({
         where: { id: payload.scheduleId },
         select: { id: true },
     });
-    if (!schedule) {
-        throw new ApiError(status.NOT_FOUND, 'Schedule not found');
-    }
 
-    const doctorSchedule = await prisma.doctorSchedules.findUnique({
+    const doctorSchedule = await prisma.doctorSchedules.findUniqueOrThrow({
         where: {
             doctorId_scheduleId: {
                 doctorId: doctor.id,
@@ -45,9 +39,6 @@ const createAppointment = async (
             },
         },
     });
-    if (!doctorSchedule) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor-Schedule not found');
-    }
 
     // check the patient have another appointment at the same time
     const isPatientHaveAppointment = await prisma.appointment.findFirst({
@@ -236,7 +227,7 @@ const changeAppointmentStatus = async (
     appointmentStatus: TChangeAppointmentStatus,
     decodedUser: TDecodedUser,
 ) => {
-    const appointment = await prisma.appointment.findUnique({
+    const appointment = await prisma.appointment.findUniqueOrThrow({
         where: { id: appointmentId },
         select: {
             id: true,
@@ -252,10 +243,7 @@ const changeAppointmentStatus = async (
                     : false,
         },
     });
-    // check appointment is exists
-    if (!appointment) {
-        throw new ApiError(status.NOT_FOUND, 'Appointment not found');
-    }
+
     // check doctor is updating his/her appointment
     if (
         decodedUser.role === 'DOCTOR' &&

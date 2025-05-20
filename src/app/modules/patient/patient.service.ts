@@ -1,7 +1,5 @@
-import status from 'http-status';
 import { Patient, Prisma } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
-import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import { patientSearchableFields } from './patient.constant';
@@ -54,27 +52,23 @@ const getAllPatientsFromDB = async (
 };
 
 const getPatientByIdFromDB = async (id: string) => {
-    const result = await prisma.patient.findUnique({
+    const result = await prisma.patient.findUniqueOrThrow({
         where: { id, isDeleted: false },
         include: {
             patientHealthData: true,
             medicalReport: true,
         },
     });
-    if (!result) {
-        throw new ApiError(status.NOT_FOUND, 'Patient not found');
-    }
+
     return result;
 };
 
 const deletePatientByIdFromDB = async (id: string) => {
-    const patient = await prisma.patient.findUnique({
+    await prisma.patient.findUniqueOrThrow({
         where: { id, isDeleted: false },
         select: { id: true },
     });
-    if (!patient) {
-        throw new ApiError(status.NOT_FOUND, 'Patient not found');
-    }
+
     const result = await prisma.$transaction(async (tx) => {
         const patientDeletedData = await tx.patient.update({
             where: { id },
@@ -93,13 +87,10 @@ const deletePatientByIdFromDB = async (id: string) => {
 
 const updatePatientByIdIntoDB = async (id: string, payload: TPatientUpdate) => {
     const { patientHealthData, medicalReport, ...patientData } = payload;
-    const patient = await prisma.patient.findUnique({
+    const patient = await prisma.patient.findUniqueOrThrow({
         where: { id, isDeleted: false },
         select: { id: true },
     });
-    if (!patient) {
-        throw new ApiError(status.NOT_FOUND, 'Patient not found');
-    }
 
     return await prisma.$transaction(async (tx) => {
         // create or update health data

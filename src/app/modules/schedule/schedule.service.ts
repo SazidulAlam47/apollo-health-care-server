@@ -5,8 +5,6 @@ import prisma from '../../utils/prisma';
 import { Prisma, Schedule } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
-import ApiError from '../../errors/ApiError';
-import status from 'http-status';
 
 const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     const intervalMinutes = 30;
@@ -127,23 +125,18 @@ const getAllSchedulesFromDB = async (
 };
 
 const getScheduleByIdFromDB = async (id: string) => {
-    const result = await prisma.schedule.findUnique({
+    const result = await prisma.schedule.findUniqueOrThrow({
         where: { id },
     });
-    if (!result) {
-        throw new ApiError(status.NOT_FOUND, 'Schedule not found');
-    }
+
     return result;
 };
 
 const deleteScheduleByIdFromDB = async (id: string) => {
-    const schedule = await prisma.schedule.findUnique({
+    await prisma.schedule.findUniqueOrThrow({
         where: { id },
         select: { id: true },
     });
-    if (!schedule) {
-        throw new ApiError(status.NOT_FOUND, 'Schedule not found');
-    }
 
     const result = await prisma.schedule.delete({
         where: { id },

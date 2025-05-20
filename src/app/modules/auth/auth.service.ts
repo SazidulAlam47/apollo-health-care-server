@@ -10,16 +10,12 @@ import { TDecodedUser } from '../../interfaces/jwt.interface';
 import sendEmail from '../../utils/sendEmail';
 
 const loginUser = async (payload: { email: string; password: string }) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: {
             email: payload.email,
             status: 'ACTIVE',
         },
     });
-
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not found');
-    }
 
     const isCorrectPassword = await comparePassword(
         payload.password,
@@ -60,16 +56,12 @@ const refreshToken = async (refreshToken: string) => {
         config.jwt.refresh_token_secret as Secret,
     );
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: {
             email: decoded.email,
             status: 'ACTIVE',
         },
     });
-
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not found');
-    }
 
     const jwtPayload = {
         email: user.email,
@@ -89,12 +81,9 @@ const changePassword = async (
     decodedUser: TDecodedUser,
     payload: { oldPassword: string; newPassword: string },
 ) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: { email: decodedUser.email, status: 'ACTIVE' },
     });
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not Found');
-    }
 
     const isCorrectPassword = await comparePassword(
         payload.oldPassword,
@@ -121,7 +110,7 @@ const changePassword = async (
 };
 
 const forgotPassword = async (email: string) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: {
             email,
             status: 'ACTIVE',
@@ -132,10 +121,6 @@ const forgotPassword = async (email: string) => {
             patient: true,
         },
     });
-
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not found');
-    }
 
     const jwtPayload = {
         email: user.email,
@@ -189,12 +174,9 @@ const resetPassword = async (
 
     const decoded = verifyToken(token, config.jwt.reset_pass_secret as Secret);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
         where: { id: payload.id, status: 'ACTIVE' },
     });
-    if (!user) {
-        throw new ApiError(status.NOT_FOUND, 'User not found');
-    }
 
     // check payload email and decoded email
     if (decoded.email !== user.email) {

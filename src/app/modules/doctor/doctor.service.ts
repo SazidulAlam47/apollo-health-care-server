@@ -1,7 +1,5 @@
-import status from 'http-status';
 import { Doctor, Prisma } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
-import ApiError from '../../errors/ApiError';
 import calculateOptions from '../../utils/calculateOptions';
 import prisma from '../../utils/prisma';
 import buildSearchFilterConditions from '../../utils/buildSearchFilterConditions';
@@ -74,7 +72,7 @@ const getAllDoctorsFromDB = async (
 };
 
 const getDoctorByIdFromDB = async (id: string) => {
-    const result = await prisma.doctor.findUnique({
+    const result = await prisma.doctor.findUniqueOrThrow({
         where: { id, isDeleted: false },
         include: {
             doctorSpecialties: {
@@ -84,20 +82,16 @@ const getDoctorByIdFromDB = async (id: string) => {
             },
         },
     });
-    if (!result) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor not found');
-    }
+
     return result;
 };
 
 const deleteDoctorByIdFromDB = async (id: string) => {
-    const doctor = await prisma.doctor.findUnique({
+    await prisma.doctor.findUniqueOrThrow({
         where: { id, isDeleted: false },
         select: { id: true },
     });
-    if (!doctor) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor not found');
-    }
+
     const result = await prisma.$transaction(async (tx) => {
         const doctorDeletedData = await tx.doctor.update({
             where: { id },
@@ -116,13 +110,10 @@ const deleteDoctorByIdFromDB = async (id: string) => {
 
 const updateDoctorByIdIntoDB = async (id: string, payload: TDoctorUpdate) => {
     const { specialties, ...doctorData } = payload;
-    const doctor = await prisma.doctor.findUnique({
+    const doctor = await prisma.doctor.findUniqueOrThrow({
         where: { id, isDeleted: false },
         select: { id: true },
     });
-    if (!doctor) {
-        throw new ApiError(status.NOT_FOUND, 'Doctor not found');
-    }
 
     const result = await prisma.$transaction(async (tx) => {
         if (specialties && specialties?.length) {
