@@ -84,6 +84,9 @@ const getDoctorByIdFromDB = async (id: string) => {
             },
         },
     });
+    if (!result) {
+        throw new ApiError(status.NOT_FOUND, 'Doctor not found');
+    }
     return result;
 };
 

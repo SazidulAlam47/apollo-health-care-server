@@ -61,6 +61,9 @@ const getPatientByIdFromDB = async (id: string) => {
             medicalReport: true,
         },
     });
+    if (!result) {
+        throw new ApiError(status.NOT_FOUND, 'Patient not found');
+    }
     return result;
 };
 

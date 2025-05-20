@@ -52,6 +52,9 @@ const getAdminByIdFromDB = async (id: string) => {
     const result = await prisma.admin.findUnique({
         where: { id, isDeleted: false },
     });
+    if (!result) {
+        throw new ApiError(status.NOT_FOUND, 'Admin not found');
+    }
     return result;
 };
 
