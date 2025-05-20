@@ -14,7 +14,7 @@ router.get('/me', auth(), UserControllers.getMyProfile);
 
 router.post(
     '/create-admin',
-    auth('ADMIN', 'SUPER_ADMIN'),
+    auth('SUPER_ADMIN'),
     upload.single('file'),
     validateRequestWithFileCleanup(UserValidations.createAdmin),
     UserControllers.createAdmin,
