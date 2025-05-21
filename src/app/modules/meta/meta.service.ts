@@ -47,6 +47,9 @@ const getSuperAdminMetaData = async () => {
         },
     });
 
+    const appointmentCountByMonth = await getBarChartData();
+    const appointmentStatusDistribution = await getPieChartData();
+
     return {
         doctorCount,
         patientCount,
@@ -54,8 +57,11 @@ const getSuperAdminMetaData = async () => {
         appointmentCount,
         paymentCount,
         totalRevenue: totalRevenue._sum.amount,
+        appointmentCountByMonth,
+        appointmentStatusDistribution,
     };
 };
+
 const getAdminMetaData = async () => {
     const doctorCount = await prisma.doctor.count();
     const patientCount = await prisma.patient.count();
@@ -81,12 +87,17 @@ const getAdminMetaData = async () => {
         },
     });
 
+    const appointmentCountByMonth = await getBarChartData();
+    const appointmentStatusDistribution = await getPieChartData();
+
     return {
         doctorCount,
         patientCount,
         appointmentCount,
         paymentCount,
         totalRevenue: totalRevenue._sum.amount,
+        appointmentCountByMonth,
+        appointmentStatusDistribution,
     };
 };
 
@@ -211,6 +222,35 @@ const getPatientMetaData = async (decodedUser: TDecodedUser) => {
         reviewCount,
         appointmentStatusDistribution: formattedAppointmentStatusDistribution,
     };
+};
+
+const getBarChartData = async () => {
+    const appointmentCountByMonth: { month: Date; count: number }[] =
+        await prisma.$queryRaw`
+        SELECT DATE_TRUNC('month', "createdAt") AS "month", CAST(COUNT(*) AS INTEGER) AS count FROM appointments
+        GROUP BY "month"
+        ORDER BY "month" ASC
+    `;
+
+    return appointmentCountByMonth.map((item) => ({
+        month: item.month.toLocaleString('en-US', { month: 'long' }),
+        count: item.count,
+    }));
+};
+
+const getPieChartData = async () => {
+    const appointmentStatusDistribution = await prisma.appointment.groupBy({
+        by: ['status'],
+        _count: true,
+    });
+
+    const formattedAppointmentStatusDistribution =
+        appointmentStatusDistribution.map((item) => ({
+            status: item.status,
+            count: item._count,
+        }));
+
+    return formattedAppointmentStatusDistribution;
 };
 
 export const MetaServices = {
