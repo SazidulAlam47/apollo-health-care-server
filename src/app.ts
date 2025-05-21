@@ -5,7 +5,7 @@ import notFound from './app/middlewares/notFound';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
 import config from './app/config';
-import scheduleCancelUnpaidAppointments from './app/DB/scheduleCancelUnpaidAppointments';
+import scheduleProcesses from './app/DB/scheduleProcesses';
 
 const app: Application = express();
 
@@ -15,7 +15,7 @@ app.use(cors({ origin: [config.client_url as string], credentials: true }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-scheduleCancelUnpaidAppointments();
+scheduleProcesses();
 
 const test = (req: Request, res: Response) => {
     res.send({ message: 'Apollo Health Care Server is Running...' });

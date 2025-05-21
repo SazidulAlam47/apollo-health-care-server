@@ -4,6 +4,8 @@ import ApiError from '../../errors/ApiError';
 import status from 'http-status';
 import { SslServices } from '../ssl/ssl.service';
 import { SSLValidationPayload } from '../ssl/ssl.interface';
+import createInvoice from '../../utils/createInvoice';
+import sendEmail from '../../utils/sendEmail';
 
 const initPayment = async (appointmentId: string, baseUrl: string) => {
     const paymentInfo = await prisma.payment.findUniqueOrThrow({
@@ -63,6 +65,14 @@ const validatePayment = async (payload: SSLValidationPayload) => {
                 status: 'PAID',
                 paymentGatewayData: sslResponse,
             },
+            include: {
+                appointment: {
+                    include: {
+                        doctor: true,
+                        patient: true,
+                    },
+                },
+            },
         });
 
         await tx.appointment.update({
@@ -73,6 +83,34 @@ const validatePayment = async (payload: SSLValidationPayload) => {
                 paymentStatus: 'PAID',
             },
         });
+
+        // send invoice email
+        const patientEmail = paymentData.appointment.patient.email;
+        const patientName = paymentData.appointment.patient.name;
+        const doctorName = paymentData.appointment.doctor.name;
+
+        const pdfBuffer = await createInvoice(paymentData);
+
+        const emailBody = `
+            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+                <h2 style="color: #4CAF50;">Your Invoice from Apollo Health Care</h2>
+                <p>Dear ${patientName},</p>
+                <p>Thank you for your recent appointment. Please find your invoice attached to this email.</p>
+                <p><strong>Invoice Details:</strong></p>
+                <ul>
+                    <li><strong>Description:</strong> Appointment with ${doctorName}</li>
+                    <li><strong>Amount:</strong> ${paymentData.amount}</li>
+                </ul>
+                <p>If you have any questions, feel free to reply to this email.</p>
+                <p>Best regards,<br/>The Apollo Health Care Team</p>
+                <hr style="margin-top: 30px;"/>
+                <p style="font-size: 12px; color: #999;">This is an automated message. Please do not reply directly to this email.</p>
+            </div>
+        `;
+
+        const subject = 'Your Invoice';
+
+        sendEmail(patientEmail, subject, emailBody, pdfBuffer);
     });
 };
 

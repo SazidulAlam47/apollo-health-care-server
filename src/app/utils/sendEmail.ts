@@ -4,8 +4,14 @@ import nodemailer from 'nodemailer';
 import config from '../config';
 import status from 'http-status';
 import ApiError from '../errors/ApiError';
+import { Buffer } from 'buffer';
 
-const sendEmail = async (to: string, subject: string, html: string) => {
+const sendEmail = async (
+    to: string,
+    subject: string,
+    html: string,
+    pdfBuffer?: Buffer<ArrayBuffer>,
+) => {
     try {
         const transporter = nodemailer.createTransport({
             host: config.node_mailer.host,
@@ -25,6 +31,15 @@ const sendEmail = async (to: string, subject: string, html: string) => {
             to,
             subject,
             html,
+            attachments: pdfBuffer
+                ? [
+                      {
+                          filename: 'invoice.pdf',
+                          content: pdfBuffer,
+                          contentType: 'application/pdf',
+                      },
+                  ]
+                : [],
         });
     } catch (err) {
         throw new ApiError(

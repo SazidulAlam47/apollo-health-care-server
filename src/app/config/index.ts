@@ -33,4 +33,5 @@ export default {
         storePass: process.env.STORE_PASS,
     },
     super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
+    easy_invoice_api_key: process.env.EASY_INVOICE_API_KEY,
 };

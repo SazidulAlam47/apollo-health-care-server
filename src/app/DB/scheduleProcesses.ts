@@ -2,7 +2,7 @@
 import cron from 'node-cron';
 import { AppointmentServices } from '../modules/appointment/appointment.service';
 
-const scheduleCancelUnpaidAppointments = () => {
+const scheduleProcesses = () => {
     cron.schedule('* * * * *', () => {
         try {
             AppointmentServices.cancelUnpaidAppointments();
@@ -12,4 +12,4 @@ const scheduleCancelUnpaidAppointments = () => {
     });
 };
 
-export default scheduleCancelUnpaidAppointments;
+export default scheduleProcesses;
