@@ -7,31 +7,14 @@ import './app/interfaces/index';
 
 const port = Number(config.port);
 
+let server: Server;
+
 async function main() {
     try {
         seedSuperAdmin();
 
-        const server: Server = app.listen(port, () => {
+        server = app.listen(port, () => {
             console.log('Apollo Health Care Server is listening on port', port);
-        });
-
-        const exitHandler = () => {
-            if (server) {
-                server.close(() => {
-                    console.info('Server closed!');
-                });
-            }
-            process.exit(1);
-        };
-
-        process.on('uncaughtException', (error) => {
-            console.log(error);
-            exitHandler();
-        });
-
-        process.on('unhandledRejection', (error) => {
-            console.log(error);
-            exitHandler();
         });
     } catch (error) {
         console.log(error);
@@ -39,3 +22,22 @@ async function main() {
 }
 
 main();
+
+const exitHandler = () => {
+    if (server) {
+        server.close(() => {
+            console.info('Server closed!');
+        });
+    }
+    process.exit(1);
+};
+
+process.on('uncaughtException', (error) => {
+    console.log(error);
+    exitHandler();
+});
+
+process.on('unhandledRejection', (error) => {
+    console.log(error);
+    exitHandler();
+});
