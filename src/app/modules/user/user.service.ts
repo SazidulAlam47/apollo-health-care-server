@@ -1,10 +1,5 @@
 import prisma from '../../utils/prisma';
-import {
-    Prisma,
-    User,
-    UserRole,
-    UserStatus,
-} from '../../../../generated/prisma';
+import { Prisma, User, UserStatus } from '../../../../generated/prisma';
 import { hashPassword } from '../../utils/bcrypt';
 import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
 import ApiError from '../../errors/ApiError';
@@ -54,7 +49,7 @@ const createAdminIntoDB = async (payload: TCreateAdminPayload, file: TFile) => {
     const userData: Pick<User, 'email' | 'password' | 'role'> = {
         email: payload.admin.email,
         password: hashedPassword,
-        role: UserRole.ADMIN,
+        role: 'ADMIN',
     };
 
     const adminData = { ...payload.admin };
@@ -113,7 +108,7 @@ const createDoctorIntoDB = async (
     const userData: Pick<User, 'email' | 'password' | 'role'> = {
         email: payload.doctor.email,
         password: hashedPassword,
-        role: UserRole.DOCTOR,
+        role: 'DOCTOR',
     };
 
     const doctorData = { ...payload.doctor };
@@ -169,10 +164,14 @@ const createPatientIntoDB = async (
 
     const hashedPassword = await hashPassword(payload.password);
 
-    const userData: Pick<User, 'email' | 'password' | 'role'> = {
+    const userData: Pick<
+        User,
+        'email' | 'password' | 'role' | 'needPasswordChange'
+    > = {
         email: payload.patient.email,
         password: hashedPassword,
-        role: UserRole.PATIENT,
+        role: 'PATIENT',
+        needPasswordChange: false,
     };
 
     const patientData = { ...payload.patient };
