@@ -233,6 +233,7 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   videoCallingId: 'videoCallingId',
   status: 'status',
   paymentStatus: 'paymentStatus',
+  reminderSent: 'reminderSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

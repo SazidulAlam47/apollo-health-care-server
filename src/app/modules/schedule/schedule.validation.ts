@@ -1,19 +1,25 @@
 import { z } from 'zod';
+import pad from '../../utils/pad';
 
 const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+const now = new Date();
+const today = new Date(
+    `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T00:00:00.000Z`,
+);
 
 const createSchedule = z
     .object({
         startDate: z
             .string()
             .date()
-            .refine((value) => new Date() < new Date(value), {
+            .refine((value) => today <= new Date(value), {
                 message: "Start date can't be in the past.",
             }),
         endDate: z
             .string()
             .date()
-            .refine((value) => new Date() < new Date(value), {
+            .refine((value) => today <= new Date(value), {
                 message: "End date can't be in the past.",
             }),
         startTime: z.string().regex(timeRegex, {
@@ -23,10 +29,13 @@ const createSchedule = z
             message: 'Invalid time format',
         }),
     })
-    .refine((values) => new Date(values.startDate) < new Date(values.endDate), {
-        message: 'startDate must be before endDate',
-        path: ['startDate', 'endDate'],
-    })
+    .refine(
+        (values) => new Date(values.startDate) <= new Date(values.endDate),
+        {
+            message: 'startDate must be before endDate',
+            path: ['startDate', 'endDate'],
+        },
+    )
     .refine(
         (values) => {
             const startTime = new Date(`1970-01-01T${values.startTime}:00`);

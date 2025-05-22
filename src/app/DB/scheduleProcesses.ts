@@ -6,6 +6,7 @@ const scheduleProcesses = () => {
     cron.schedule('* * * * *', () => {
         try {
             AppointmentServices.cancelUnpaidAppointments();
+            AppointmentServices.getAppointmentsBefore30Minutes();
         } catch (err) {
             console.log(err);
         }

@@ -6,6 +6,9 @@ import { TCreateDoctorSchedulePayload } from './doctorSchedule.interface';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
 import { Prisma } from '../../../../generated/prisma';
+import { convertDataTimeToLocal } from '../../utils/convertDataTime';
+
+const now = convertDataTimeToLocal(new Date());
 
 const createDoctorSchedule = async (
     payload: TCreateDoctorSchedulePayload,
@@ -15,6 +18,20 @@ const createDoctorSchedule = async (
         where: { email: decodedUser.email },
         select: { id: true },
     });
+
+    for (const scheduleId of payload.scheduleIds) {
+        const schedule = await prisma.schedule.findUniqueOrThrow({
+            where: { id: scheduleId },
+            select: { id: true, startDateTime: true },
+        });
+
+        if (schedule.startDateTime < now) {
+            throw new ApiError(
+                status.BAD_REQUEST,
+                'Schedule can not be in past',
+            );
+        }
+    }
 
     const doctorSchedules = payload.scheduleIds.map((scheduleId) => ({
         doctorId: doctor.id,

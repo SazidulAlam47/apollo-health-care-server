@@ -6,6 +6,10 @@ import { SslServices } from '../ssl/ssl.service';
 import { SSLValidationPayload } from '../ssl/ssl.interface';
 import createInvoice from '../../utils/createInvoice';
 import sendEmail from '../../utils/sendEmail';
+import pad from '../../utils/pad';
+import { convertDataTimeToLocal } from '../../utils/convertDataTime';
+
+const now = convertDataTimeToLocal(new Date());
 
 const initPayment = async (appointmentId: string, baseUrl: string) => {
     const paymentInfo = await prisma.payment.findUniqueOrThrow({
@@ -16,18 +20,25 @@ const initPayment = async (appointmentId: string, baseUrl: string) => {
             appointment: {
                 include: {
                     patient: true,
+                    schedule: true,
                 },
             },
         },
     });
 
     if (paymentInfo.status === 'PAID') {
-        throw new ApiError(status.BAD_REQUEST, 'Appointment is already Paid');
+        throw new ApiError(status.BAD_REQUEST, 'Appointment is already PAID');
     }
-    if (paymentInfo.appointment.status === 'CANCELED') {
+    if (paymentInfo.appointment.status !== 'SCHEDULED') {
         throw new ApiError(
             status.BAD_REQUEST,
-            'Appointment is already CANCELED',
+            `Appointment is already ${paymentInfo.appointment.status}`,
+        );
+    }
+    if (paymentInfo.appointment.schedule.startDateTime < now) {
+        throw new ApiError(
+            status.BAD_REQUEST,
+            'Appointment can not be in past',
         );
     }
 
@@ -70,6 +81,7 @@ const validatePayment = async (payload: SSLValidationPayload) => {
                     include: {
                         doctor: true,
                         patient: true,
+                        schedule: true,
                     },
                 },
             },
@@ -89,6 +101,11 @@ const validatePayment = async (payload: SSLValidationPayload) => {
         const patientName = paymentData.appointment.patient.name;
         const doctorName = paymentData.appointment.doctor.name;
 
+        const appointmentDate = `${paymentData.appointment.schedule.startDateTime.getUTCDate()}-${paymentData.appointment.schedule.startDateTime.getUTCMonth()}-${paymentData.appointment.schedule.startDateTime.getUTCFullYear()}`;
+        const appointmentTime = `${paymentData.appointment.schedule.startDateTime.getUTCHours()}:${pad(paymentData.appointment.schedule.startDateTime.getUTCMinutes())}`;
+
+        // const appointmentDate =
+
         const pdfBuffer = await createInvoice(paymentData);
 
         const emailBody = `
@@ -99,7 +116,9 @@ const validatePayment = async (payload: SSLValidationPayload) => {
                 <p><strong>Invoice Details:</strong></p>
                 <ul>
                     <li><strong>Description:</strong> Appointment with ${doctorName}</li>
-                    <li><strong>Amount:</strong> ${paymentData.amount}</li>
+                    <li><strong>Amount:</strong> ${paymentData.amount} tk</li>
+                    <li><strong>Date:</strong> ${appointmentDate}</li>
+                    <li><strong>Time:</strong> ${appointmentTime}</li>
                 </ul>
                 <p>If you have any questions, feel free to reply to this email.</p>
                 <p>Best regards,<br/>The Apollo Health Care Team</p>

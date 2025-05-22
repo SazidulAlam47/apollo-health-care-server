@@ -12748,6 +12748,7 @@ export namespace Prisma {
     videoCallingId: string | null
     status: $Enums.AppointmentStatus | null
     paymentStatus: $Enums.PaymentStatus | null
+    reminderSent: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12760,6 +12761,7 @@ export namespace Prisma {
     videoCallingId: string | null
     status: $Enums.AppointmentStatus | null
     paymentStatus: $Enums.PaymentStatus | null
+    reminderSent: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12772,6 +12774,7 @@ export namespace Prisma {
     videoCallingId: number
     status: number
     paymentStatus: number
+    reminderSent: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -12786,6 +12789,7 @@ export namespace Prisma {
     videoCallingId?: true
     status?: true
     paymentStatus?: true
+    reminderSent?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12798,6 +12802,7 @@ export namespace Prisma {
     videoCallingId?: true
     status?: true
     paymentStatus?: true
+    reminderSent?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12810,6 +12815,7 @@ export namespace Prisma {
     videoCallingId?: true
     status?: true
     paymentStatus?: true
+    reminderSent?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -12895,6 +12901,7 @@ export namespace Prisma {
     videoCallingId: string
     status: $Enums.AppointmentStatus
     paymentStatus: $Enums.PaymentStatus
+    reminderSent: boolean
     createdAt: Date
     updatedAt: Date
     _count: AppointmentCountAggregateOutputType | null
@@ -12924,6 +12931,7 @@ export namespace Prisma {
     videoCallingId?: boolean
     status?: boolean
     paymentStatus?: boolean
+    reminderSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     patient?: boolean | PatientDefaultArgs<ExtArgs>
@@ -12943,6 +12951,7 @@ export namespace Prisma {
     videoCallingId?: boolean
     status?: boolean
     paymentStatus?: boolean
+    reminderSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     patient?: boolean | PatientDefaultArgs<ExtArgs>
@@ -12958,6 +12967,7 @@ export namespace Prisma {
     videoCallingId?: boolean
     status?: boolean
     paymentStatus?: boolean
+    reminderSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     patient?: boolean | PatientDefaultArgs<ExtArgs>
@@ -12973,11 +12983,12 @@ export namespace Prisma {
     videoCallingId?: boolean
     status?: boolean
     paymentStatus?: boolean
+    reminderSent?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "patientId" | "doctorId" | "scheduleId" | "videoCallingId" | "status" | "paymentStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
+  export type AppointmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "patientId" | "doctorId" | "scheduleId" | "videoCallingId" | "status" | "paymentStatus" | "reminderSent" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
   export type AppointmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     patient?: boolean | PatientDefaultArgs<ExtArgs>
     doctor?: boolean | DoctorDefaultArgs<ExtArgs>
@@ -13017,6 +13028,7 @@ export namespace Prisma {
       videoCallingId: string
       status: $Enums.AppointmentStatus
       paymentStatus: $Enums.PaymentStatus
+      reminderSent: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["appointment"]>
@@ -13456,6 +13468,7 @@ export namespace Prisma {
     readonly videoCallingId: FieldRef<"Appointment", 'String'>
     readonly status: FieldRef<"Appointment", 'AppointmentStatus'>
     readonly paymentStatus: FieldRef<"Appointment", 'PaymentStatus'>
+    readonly reminderSent: FieldRef<"Appointment", 'Boolean'>
     readonly createdAt: FieldRef<"Appointment", 'DateTime'>
     readonly updatedAt: FieldRef<"Appointment", 'DateTime'>
   }
@@ -18569,6 +18582,7 @@ export namespace Prisma {
     videoCallingId: 'videoCallingId',
     status: 'status',
     paymentStatus: 'paymentStatus',
+    reminderSent: 'reminderSent',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -19569,6 +19583,7 @@ export namespace Prisma {
     videoCallingId?: StringFilter<"Appointment"> | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFilter<"Appointment"> | $Enums.PaymentStatus
+    reminderSent?: BoolFilter<"Appointment"> | boolean
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
     updatedAt?: DateTimeFilter<"Appointment"> | Date | string
     patient?: XOR<PatientScalarRelationFilter, PatientWhereInput>
@@ -19588,6 +19603,7 @@ export namespace Prisma {
     videoCallingId?: SortOrder
     status?: SortOrder
     paymentStatus?: SortOrder
+    reminderSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     patient?: PatientOrderByWithRelationInput
@@ -19610,6 +19626,7 @@ export namespace Prisma {
     videoCallingId?: StringFilter<"Appointment"> | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFilter<"Appointment"> | $Enums.PaymentStatus
+    reminderSent?: BoolFilter<"Appointment"> | boolean
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
     updatedAt?: DateTimeFilter<"Appointment"> | Date | string
     patient?: XOR<PatientScalarRelationFilter, PatientWhereInput>
@@ -19629,6 +19646,7 @@ export namespace Prisma {
     videoCallingId?: SortOrder
     status?: SortOrder
     paymentStatus?: SortOrder
+    reminderSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AppointmentCountOrderByAggregateInput
@@ -19647,6 +19665,7 @@ export namespace Prisma {
     videoCallingId?: StringWithAggregatesFilter<"Appointment"> | string
     status?: EnumAppointmentStatusWithAggregatesFilter<"Appointment"> | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusWithAggregatesFilter<"Appointment"> | $Enums.PaymentStatus
+    reminderSent?: BoolWithAggregatesFilter<"Appointment"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   }
@@ -20732,6 +20751,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -20751,6 +20771,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -20764,6 +20785,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -20783,6 +20805,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -20799,6 +20822,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20808,6 +20832,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20820,6 +20845,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21868,6 +21894,7 @@ export namespace Prisma {
     videoCallingId?: SortOrder
     status?: SortOrder
     paymentStatus?: SortOrder
+    reminderSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21880,6 +21907,7 @@ export namespace Prisma {
     videoCallingId?: SortOrder
     status?: SortOrder
     paymentStatus?: SortOrder
+    reminderSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21892,6 +21920,7 @@ export namespace Prisma {
     videoCallingId?: SortOrder
     status?: SortOrder
     paymentStatus?: SortOrder
+    reminderSent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23943,6 +23972,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -23960,6 +23990,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -24148,6 +24179,7 @@ export namespace Prisma {
     videoCallingId?: StringFilter<"Appointment"> | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFilter<"Appointment"> | $Enums.PaymentStatus
+    reminderSent?: BoolFilter<"Appointment"> | boolean
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
     updatedAt?: DateTimeFilter<"Appointment"> | Date | string
   }
@@ -24349,6 +24381,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctor: DoctorCreateNestedOneWithoutAppointmentInput
@@ -24366,6 +24399,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -24985,6 +25019,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -25002,6 +25037,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -25585,6 +25621,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -25603,6 +25640,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     payment?: PaymentUncheckedCreateNestedOneWithoutAppointmentInput
@@ -25719,6 +25757,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -25737,6 +25776,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     payment?: PaymentUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -25749,6 +25789,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -25767,6 +25808,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -25795,6 +25837,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -25813,6 +25856,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -25825,6 +25869,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -25843,6 +25888,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -25961,6 +26007,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -25979,6 +26026,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -26183,6 +26231,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     patient: PatientCreateNestedOneWithoutAppointmentInput
@@ -26201,6 +26250,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     doctorSchedules?: DoctorSchedulesUncheckedCreateNestedOneWithoutAppointmentInput
@@ -26331,6 +26381,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -26349,6 +26400,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -26367,6 +26419,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26414,6 +26467,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -26431,6 +26485,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -26446,6 +26501,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26543,6 +26599,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26596,6 +26653,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctor?: DoctorUpdateOneRequiredWithoutAppointmentNestedInput
@@ -26613,6 +26671,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -26628,6 +26687,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26721,6 +26781,7 @@ export namespace Prisma {
     videoCallingId: string
     status?: $Enums.AppointmentStatus
     paymentStatus?: $Enums.PaymentStatus
+    reminderSent?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26748,6 +26809,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     patient?: PatientUpdateOneRequiredWithoutAppointmentNestedInput
@@ -26765,6 +26827,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doctorSchedules?: DoctorSchedulesUncheckedUpdateOneWithoutAppointmentNestedInput
@@ -26780,6 +26843,7 @@ export namespace Prisma {
     videoCallingId?: StringFieldUpdateOperationsInput | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    reminderSent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
