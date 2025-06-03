@@ -29,7 +29,7 @@ const createInvoice = async (paymentData: TPaymentWithDoctorPatient) => {
             },
         ],
         images: {
-            logo: 'https://res.cloudinary.com/dvrqc1qdm/image/upload/v1747855518/health_care_logo_kabqqd.png',
+            logo: 'https://res.cloudinary.com/dvrqc1qdm/image/upload/v1748945585/health_care_logo_jihwdr.png',
         },
         sender: {
             company: 'Apollo Health Care',
