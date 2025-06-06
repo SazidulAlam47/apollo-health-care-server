@@ -2,6 +2,8 @@ import status from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { SpecialtiesServices } from './specialties.service';
+import { queryFilters } from '../../constants';
+import pick from '../../utils/pick';
 
 const createSpecialties = catchAsync(async (req, res) => {
     const result = await SpecialtiesServices.createSpecialtiesIntoDB(
@@ -16,11 +18,13 @@ const createSpecialties = catchAsync(async (req, res) => {
 });
 
 const getAllSpecialties = catchAsync(async (req, res) => {
-    const result = await SpecialtiesServices.getAllSpecialtiesFromDB();
+    const query = pick(req.query, queryFilters);
+    const result = await SpecialtiesServices.getAllSpecialtiesFromDB(query);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'All Specialties are fetched successfully',
-        data: result,
+        meta: result.meta,
+        data: result.data,
     });
 });
 

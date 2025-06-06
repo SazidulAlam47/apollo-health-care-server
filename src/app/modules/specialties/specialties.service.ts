@@ -5,6 +5,8 @@ import ApiError from '../../errors/ApiError';
 import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
 import prisma from '../../utils/prisma';
 import deleteFile from '../../utils/deleteFile';
+import { TQueryParams } from '../../interfaces';
+import calculateOptions from '../../utils/calculateOptions';
 
 const createSpecialtiesIntoDB = async (
     payload: Specialties,
@@ -33,9 +35,18 @@ const createSpecialtiesIntoDB = async (
     return result;
 };
 
-const getAllSpecialtiesFromDB = async () => {
-    const result = await prisma.specialties.findMany();
-    return result;
+const getAllSpecialtiesFromDB = async (query: TQueryParams) => {
+    const { page, limit, skip } = calculateOptions(query);
+
+    const result = await prisma.specialties.findMany({
+        skip: skip,
+        take: limit,
+    });
+
+    const totalData = await prisma.specialties.count();
+    const totalPage = Math.ceil(totalData / limit);
+
+    return { data: result, meta: { page, limit, totalData, totalPage } };
 };
 
 const deleteSpecialtiesByIdFromDB = async (id: string) => {
