@@ -6,13 +6,9 @@ import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
-router.get('/', auth('ADMIN', 'SUPER_ADMIN'), DoctorControllers.getAllDoctors);
+router.get('/', DoctorControllers.getAllDoctors);
 
-router.get(
-    '/:id',
-    auth('ADMIN', 'SUPER_ADMIN'),
-    DoctorControllers.getDoctorById,
-);
+router.get('/:id', DoctorControllers.getDoctorById);
 
 router.delete(
     '/:id',

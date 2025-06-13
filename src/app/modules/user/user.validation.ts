@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Gender, UserStatus } from '../../../../generated/prisma';
+import { newPasswordSchema } from '../auth/auth.validation';
 
 const createAdmin = z.object({
     password: z.string(),
@@ -28,11 +29,13 @@ const createDoctor = z.object({
 });
 
 const createPatient = z.object({
-    password: z.string(),
+    password: newPasswordSchema,
     patient: z.object({
         name: z.string(),
         email: z.string().email(),
-        contactNumber: z.string(),
+        contactNumber: z.string().regex(/^\+?[\d\s\-()]+$/, {
+            message: 'Invalid contact number',
+        }),
         address: z.string().optional(),
     }),
 });
