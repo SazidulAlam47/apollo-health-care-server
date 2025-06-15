@@ -10,12 +10,16 @@ import { TDecodedUser } from '../../interfaces/jwt.interface';
 import sendEmail from '../../utils/sendEmail';
 
 const loginUser = async (payload: { email: string; password: string }) => {
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma.user.findUnique({
         where: {
             email: payload.email,
             status: 'ACTIVE',
         },
     });
+
+    if (!user) {
+        throw new ApiError(status.NOT_FOUND, 'This email is not registered');
+    }
 
     const isCorrectPassword = await comparePassword(
         payload.password,
@@ -23,7 +27,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     );
 
     if (!isCorrectPassword) {
-        throw new ApiError(status.FORBIDDEN, 'Password did not matched');
+        throw new ApiError(status.FORBIDDEN, 'Incorrect Password');
     }
 
     const jwtPayload = {
