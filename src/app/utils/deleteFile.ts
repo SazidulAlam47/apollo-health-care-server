@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { Express } from 'express';
+import { TFile } from '../modules/user/user.interface';
 
-const deleteFile = (file?: Express.Multer.File) => {
+const deleteFile = (file?: TFile) => {
     const filePath = file?.path;
     if (filePath) {
         fs.unlinkSync(filePath);

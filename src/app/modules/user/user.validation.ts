@@ -7,7 +7,9 @@ const createAdmin = z.object({
     admin: z.object({
         name: z.string(),
         email: z.string().email(),
-        contactNumber: z.string(),
+        contactNumber: z.string().regex(/^01\d{9}$/, {
+            message: 'Number must be 11 digits and start with 01',
+        }),
     }),
 });
 
@@ -16,7 +18,9 @@ const createDoctor = z.object({
     doctor: z.object({
         name: z.string(),
         email: z.string().email(),
-        contactNumber: z.string(),
+        contactNumber: z.string().regex(/^01\d{9}$/, {
+            message: 'Number must be 11 digits and start with 01',
+        }),
         address: z.string().optional(),
         registrationNumber: z.string(),
         experience: z.number().default(0),
@@ -33,8 +37,8 @@ const createPatient = z.object({
     patient: z.object({
         name: z.string(),
         email: z.string().email(),
-        contactNumber: z.string().regex(/^\+?[\d\s\-()]+$/, {
-            message: 'Invalid contact number',
+        contactNumber: z.string().regex(/^01\d{9}$/, {
+            message: 'Number must be 11 digits and start with 01',
         }),
         address: z.string().optional(),
     }),
@@ -46,7 +50,12 @@ const changeProfileStatus = z.object({
 
 const updateMyProfile = z.object({
     name: z.string().optional(),
-    contactNumber: z.string().optional(),
+    contactNumber: z
+        .string()
+        .regex(/^01\d{9}$/, {
+            message: 'Number must be 11 digits and start with 01',
+        })
+        .optional(),
     address: z.string().optional(),
     registrationNumber: z.string().optional(),
     experience: z.number().optional(),

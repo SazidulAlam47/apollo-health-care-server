@@ -8,7 +8,12 @@ import {
 const patientUpdate = z.object({
     name: z.string().optional(),
     email: z.string().email().optional(),
-    contactNumber: z.string().optional(),
+    contactNumber: z
+        .string()
+        .regex(/^01\d{9}$/, {
+            message: 'Number must be 11 digits and start with 01',
+        })
+        .optional(),
     address: z.string().optional(),
     patientHealthData: z
         .object({

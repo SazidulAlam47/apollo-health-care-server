@@ -1,5 +1,4 @@
 import status from 'http-status';
-import { Express } from 'express';
 import { Specialties } from '../../../../generated/prisma';
 import ApiError from '../../errors/ApiError';
 import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
@@ -7,11 +6,9 @@ import prisma from '../../utils/prisma';
 import deleteFile from '../../utils/deleteFile';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
+import { TFile } from '../user/user.interface';
 
-const createSpecialtiesIntoDB = async (
-    payload: Specialties,
-    file: Express.Multer.File | undefined,
-) => {
+const createSpecialtiesIntoDB = async (payload: Specialties, file: TFile) => {
     const isSpecialtiesExists = await prisma.specialties.findUnique({
         where: { title: payload.title },
         select: { id: true },

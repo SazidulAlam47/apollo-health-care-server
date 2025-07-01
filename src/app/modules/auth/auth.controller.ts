@@ -8,7 +8,7 @@ import { CustomRequest } from '../../interfaces';
 const loginUser = catchAsync(async (req, res) => {
     const result = await AuthServices.loginUser(req.body);
 
-    const { refreshToken, accessToken, needPasswordChange } = result;
+    const { refreshToken, accessToken, needPasswordChange, role } = result;
 
     res.cookie('refreshToken', refreshToken, {
         secure: config.NODE_ENV === 'production',
@@ -23,6 +23,7 @@ const loginUser = catchAsync(async (req, res) => {
         data: {
             accessToken,
             needPasswordChange,
+            role,
         },
     });
 });
