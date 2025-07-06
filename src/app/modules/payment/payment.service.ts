@@ -7,9 +7,9 @@ import { SSLValidationPayload } from '../ssl/ssl.interface';
 import createInvoice from '../../utils/createInvoice';
 import sendEmail from '../../utils/sendEmail';
 import pad from '../../utils/pad';
-import { convertDataTimeToLocal } from '../../utils/convertDataTime';
+import { convertDateTimeToLocal } from '../../utils/convertDateTimeUtcLocal';
 
-const now = convertDataTimeToLocal(new Date());
+const now = convertDateTimeToLocal(new Date());
 
 const initPayment = async (appointmentId: string, baseUrl: string) => {
     const paymentInfo = await prisma.payment.findUniqueOrThrow({

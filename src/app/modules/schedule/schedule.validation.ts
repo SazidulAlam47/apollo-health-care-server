@@ -30,6 +30,32 @@ const createSchedule = z
         }),
     })
     .refine(
+        (values) => {
+            const startDateTime = new Date(
+                `${values.startDate}T${values.startTime}:00`,
+            );
+
+            return now <= startDateTime;
+        },
+        {
+            message: "Start Time can't be in the past",
+            path: ['startTime'],
+        },
+    )
+    .refine(
+        (values) => {
+            const endDateTime = new Date(
+                `${values.endDate}T${values.endTime}:00`,
+            );
+
+            return now <= endDateTime;
+        },
+        {
+            message: "End Time can't be in the past",
+            path: ['endTime'],
+        },
+    )
+    .refine(
         (values) => new Date(values.startDate) <= new Date(values.endDate),
         {
             message: 'startDate must be before endDate',
@@ -38,10 +64,14 @@ const createSchedule = z
     )
     .refine(
         (values) => {
-            const startTime = new Date(`1970-01-01T${values.startTime}:00`);
-            const endTime = new Date(`1970-01-01T${values.endTime}:00`);
+            const startDateTime = new Date(
+                `${values.startDate}T${values.startTime}:00`,
+            );
+            const endDateTime = new Date(
+                `${values.endDate}T${values.endTime}:00`,
+            );
 
-            return startTime < endTime;
+            return startDateTime < endDateTime;
         },
         {
             message: 'startTime must be before endTime',

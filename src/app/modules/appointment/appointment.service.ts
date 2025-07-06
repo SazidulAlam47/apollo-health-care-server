@@ -12,10 +12,10 @@ import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
 import { buildFilterConditions } from '../../utils/buildSearchFilterConditions';
 import sendEmail from '../../utils/sendEmail';
-import { convertDataTimeToLocal } from '../../utils/convertDataTime';
+import { convertDateTimeToLocal } from '../../utils/convertDateTimeUtcLocal';
 import pad from '../../utils/pad';
 
-const now = convertDataTimeToLocal(new Date());
+const now = convertDateTimeToLocal(new Date());
 
 const createAppointment = async (
     payload: TCreateAppointmentPayload,
@@ -346,9 +346,9 @@ const cancelUnpaidAppointments = async () => {
 
 const getAppointmentsBefore30Minutes = async () => {
     const minute = 30;
-    const now = convertDataTimeToLocal(new Date());
+    const now = convertDateTimeToLocal(new Date());
 
-    const thirtyMinFuture = convertDataTimeToLocal(
+    const thirtyMinFuture = convertDateTimeToLocal(
         new Date(Date.now() + minute * 60 * 1000),
     );
 

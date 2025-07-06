@@ -1,4 +1,4 @@
-export const convertDataTimeToUTC = (date: Date) => {
+export const convertDateTimeToUTC = (date: Date) => {
     const offset = date.getTimezoneOffset() * 60000;
 
     // console.log(date.getHours()); // converted to local time from DB
@@ -7,7 +7,7 @@ export const convertDataTimeToUTC = (date: Date) => {
     return new Date(date.getTime() + offset);
 };
 
-export const convertDataTimeToLocal = (date: Date) => {
+export const convertDateTimeToLocal = (date: Date) => {
     const offset = date.getTimezoneOffset() * 60000;
 
     // console.log(date.getHours()); // converted to local time from DB

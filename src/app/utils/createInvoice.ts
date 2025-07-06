@@ -2,7 +2,7 @@ import easyinvoice, { InvoiceData } from 'easyinvoice';
 import config from '../config';
 import { Buffer } from 'buffer';
 import { Prisma } from '../../../generated/prisma';
-import { convertDataTimeToLocal } from './convertDataTime';
+import { convertDateTimeToLocal } from './convertDateTimeUtcLocal';
 
 type TPaymentWithDoctorPatient = Prisma.PaymentGetPayload<{
     include: {
@@ -15,7 +15,7 @@ type TPaymentWithDoctorPatient = Prisma.PaymentGetPayload<{
     };
 }>;
 
-const now = convertDataTimeToLocal(new Date());
+const now = convertDateTimeToLocal(new Date());
 const today = `${now.getUTCDate()}-${now.getUTCMonth() + 1}-${now.getUTCFullYear()}`;
 
 const createInvoice = async (paymentData: TPaymentWithDoctorPatient) => {

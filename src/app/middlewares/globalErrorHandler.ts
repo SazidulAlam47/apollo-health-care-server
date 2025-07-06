@@ -29,6 +29,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
             message = `${err.meta?.modelName || 'Something is'} not found`;
             error = err.meta;
         }
+        if (err.code === 'P2003') {
+            statusCode = status.BAD_REQUEST;
+            message = 'Cannot delete: related records exist.';
+            error = err.meta;
+        }
     }
 
     res.status(statusCode).json({

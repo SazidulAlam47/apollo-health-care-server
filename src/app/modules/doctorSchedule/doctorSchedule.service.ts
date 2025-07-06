@@ -6,9 +6,9 @@ import { TCreateDoctorSchedulePayload } from './doctorSchedule.interface';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
 import { Prisma } from '../../../../generated/prisma';
-import { convertDataTimeToLocal } from '../../utils/convertDataTime';
+import { convertDateTimeToLocal } from '../../utils/convertDateTimeUtcLocal';
 
-const now = convertDataTimeToLocal(new Date());
+const now = convertDateTimeToLocal(new Date());
 
 const createDoctorSchedule = async (
     payload: TCreateDoctorSchedulePayload,

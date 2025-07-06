@@ -5,6 +5,8 @@ import prisma from '../../utils/prisma';
 import { Prisma, Schedule } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
 import calculateOptions from '../../utils/calculateOptions';
+import ApiError from '../../errors/ApiError';
+import status from 'http-status';
 
 const createScheduleIntoDB = async (payload: TCreateSchedule) => {
     const intervalMinutes = 30;
@@ -54,6 +56,13 @@ const createScheduleIntoDB = async (payload: TCreateSchedule) => {
 
             result.push(createdSchedule);
         }
+    }
+
+    if (!result.length) {
+        throw new ApiError(
+            status.CONFLICT,
+            'Schedules are already exists for the requested time range',
+        );
     }
 
     return result;
