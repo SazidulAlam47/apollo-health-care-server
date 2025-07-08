@@ -337,7 +337,7 @@ const updateMyProfileIntoDB = async (
     }
 
     if (user.role == 'DOCTOR') {
-        result = await prisma.patient.update({
+        result = await prisma.doctor.update({
             where: { email: user.email },
             data: payload,
         });
