@@ -4,7 +4,6 @@ import { TCreateSchedule } from './schedule.interface';
 import prisma from '../../utils/prisma';
 import { Prisma, Schedule } from '../../../../generated/prisma';
 import { TQueryParams } from '../../interfaces';
-import calculateOptions from '../../utils/calculateOptions';
 import ApiError from '../../errors/ApiError';
 import status from 'http-status';
 
@@ -73,11 +72,25 @@ const getAllSchedulesFromDB = async (
     query: TQueryParams,
     decodedUser: TDecodedUser,
 ) => {
-    // default sort
-    query.sortBy = query.sortBy || 'startDateTime';
-    query.sortOrder = query.sortOrder || 'asc';
+    // pagination
+    let page: number;
+    let limit: number | undefined;
+    let skip: number;
 
-    const { page, limit, skip, sortBy, sortOrder } = calculateOptions(query);
+    if (query.page && query.limit) {
+        page = Number(query.page);
+        limit = Number(query.limit);
+        skip = (page - 1) * limit;
+    } else {
+        page = 1;
+        limit = undefined;
+        skip = 0;
+    }
+
+    // sorting
+    const sortBy = query.sortBy || 'startDateTime';
+    const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
+
     const andConditions: Prisma.ScheduleWhereInput[] = [];
 
     // filter with range
@@ -128,9 +141,12 @@ const getAllSchedulesFromDB = async (
     const totalData = await prisma.schedule.count({
         where: whereCondition,
     });
-    const totalPage = Math.ceil(totalData / limit);
+    const totalPage = limit ? Math.ceil(totalData / limit) : 1;
 
-    return { data: result, meta: { page, limit, totalData, totalPage } };
+    return {
+        data: result,
+        meta: { page, limit: limit || 'Infinity', totalData, totalPage },
+    };
 };
 
 const getScheduleByIdFromDB = async (id: string) => {
