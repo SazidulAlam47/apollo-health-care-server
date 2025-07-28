@@ -282,7 +282,15 @@ const getMyProfileFromDB = async (userData: TDecodedUser) => {
             createdAt: true,
             updatedAt: true,
             admin: userData.role === 'ADMIN',
-            doctor: userData.role === 'DOCTOR',
+            doctor: userData.role === 'DOCTOR' && {
+                include: {
+                    doctorSpecialties: {
+                        include: {
+                            specialties: true,
+                        },
+                    },
+                },
+            },
             patient: userData.role === 'PATIENT',
         },
     });
@@ -337,9 +345,71 @@ const updateMyProfileIntoDB = async (
     }
 
     if (user.role == 'DOCTOR') {
-        result = await prisma.doctor.update({
-            where: { email: user.email },
-            data: payload,
+        const { specialties, ...doctorData } = payload;
+
+        const doctor = await prisma.doctor.findUniqueOrThrow({
+            where: { email: user.email, isDeleted: false },
+            select: { id: true },
+        });
+
+        result = await prisma.$transaction(async (tx) => {
+            if (specialties && specialties?.length) {
+                // remove Specialties
+                const removeSpecialties = specialties?.filter(
+                    (specialty) => specialty.isDeleted === true,
+                );
+
+                if (removeSpecialties?.length) {
+                    for (const removeSpecialty of removeSpecialties) {
+                        await tx.doctorSpecialties.deleteMany({
+                            where: {
+                                specialitiesId: removeSpecialty.specialtiesId,
+                                doctorId: doctor.id,
+                            },
+                        });
+                    }
+                }
+
+                // add Specialties
+                const addSpecialties = specialties?.filter(
+                    (specialty) => specialty.isDeleted === false,
+                );
+                if (addSpecialties?.length) {
+                    for (const addSpecialty of addSpecialties) {
+                        // check before adding
+                        const isSpecialtyExists =
+                            await tx.doctorSpecialties.findFirst({
+                                where: {
+                                    doctorId: doctor.id,
+                                    specialitiesId: addSpecialty.specialtiesId,
+                                },
+                            });
+                        // if exists then skip
+                        if (isSpecialtyExists) continue;
+
+                        await tx.doctorSpecialties.create({
+                            data: {
+                                doctorId: doctor.id,
+                                specialitiesId: addSpecialty.specialtiesId,
+                            },
+                        });
+                    }
+                }
+            }
+
+            const updatedDoctor = await tx.doctor.update({
+                where: { id: doctor.id },
+                data: doctorData,
+                include: {
+                    doctorSpecialties: {
+                        include: {
+                            specialties: true,
+                        },
+                    },
+                },
+            });
+
+            return updatedDoctor;
         });
     }
 

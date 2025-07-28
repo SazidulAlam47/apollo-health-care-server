@@ -143,9 +143,11 @@ const getAllSchedulesFromDB = async (
     });
     const totalPage = limit ? Math.ceil(totalData / limit) : 1;
 
+    const LimitResponse: number | 'Infinity' = limit || 'Infinity';
+
     return {
         data: result,
-        meta: { page, limit: limit || 'Infinity', totalData, totalPage },
+        meta: { page, limit: LimitResponse, totalData, totalPage },
     };
 };
 

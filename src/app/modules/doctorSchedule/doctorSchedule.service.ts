@@ -103,10 +103,15 @@ const getMySchedules = async (
         take: limit,
         include: {
             schedule: true,
+            appointment: {
+                include: {
+                    patient: true,
+                },
+            },
         },
         orderBy: {
             schedule: {
-                startDateTime: query.sortOrder === 'desc' ? 'desc' : 'asc',
+                startDateTime: query.sortOrder === 'asc' ? 'asc' : 'desc',
             },
         },
     });

@@ -63,6 +63,14 @@ const updateMyProfile = z.object({
     qualification: z.string().optional(),
     currentWorkingPlace: z.string().optional(),
     designation: z.string().optional(),
+    specialties: z
+        .array(
+            z.object({
+                specialtiesId: z.string(),
+                isDeleted: z.boolean(),
+            }),
+        )
+        .optional(),
 });
 
 export const UserValidations = {

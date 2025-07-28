@@ -2,7 +2,7 @@ import { Response } from 'express';
 
 type TMeta = {
     page: number;
-    limit: number;
+    limit: number | 'Infinity';
     totalData: number;
     totalPage: number;
 };

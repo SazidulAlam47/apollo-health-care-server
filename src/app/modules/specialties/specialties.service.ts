@@ -5,7 +5,6 @@ import sendImageToCloudinary from '../../utils/sendImageToCloudinary';
 import prisma from '../../utils/prisma';
 import deleteFile from '../../utils/deleteFile';
 import { TQueryParams } from '../../interfaces';
-import calculateOptions from '../../utils/calculateOptions';
 import { TFile } from '../user/user.interface';
 import { buildSearchConditions } from '../../utils/buildSearchFilterConditions';
 import { specialtiesSearchableFields } from './specialties.constant';
@@ -35,12 +34,25 @@ const createSpecialtiesIntoDB = async (payload: Specialties, file: TFile) => {
 };
 
 const getAllSpecialtiesFromDB = async (query: TQueryParams) => {
-    const { page, limit, skip, searchTerm } = calculateOptions(query);
+    // pagination
+    let page: number;
+    let limit: number | undefined;
+    let skip: number;
+
+    if (query.page && query.limit) {
+        page = Number(query.page);
+        limit = Number(query.limit);
+        skip = (page - 1) * limit;
+    } else {
+        page = 1;
+        limit = undefined;
+        skip = 0;
+    }
 
     const andConditions: Prisma.SpecialtiesWhereInput[] = [];
 
     const searchCondition = buildSearchConditions(
-        searchTerm,
+        query.searchTerm,
         specialtiesSearchableFields,
     );
 
@@ -57,9 +69,13 @@ const getAllSpecialtiesFromDB = async (query: TQueryParams) => {
     });
 
     const totalData = await prisma.specialties.count({ where: whereCondition });
-    const totalPage = Math.ceil(totalData / limit);
+    const totalPage = limit ? Math.ceil(totalData / limit) : 1;
+    const LimitResponse: number | 'Infinity' = limit || 'Infinity';
 
-    return { data: result, meta: { page, limit, totalData, totalPage } };
+    return {
+        data: result,
+        meta: { page, limit: LimitResponse, totalData, totalPage },
+    };
 };
 
 const deleteSpecialtiesByIdFromDB = async (id: string) => {

@@ -11,7 +11,7 @@ const createSchedule = catchAsync(async (req, res) => {
     const result = await ScheduleServices.createScheduleIntoDB(req.body);
     sendResponse(res, {
         statusCode: status.CREATED,
-        message: 'Schedule created successfully',
+        message: `${result.length} Schedules created successfully`,
         data: result,
     });
 });
