@@ -17,10 +17,7 @@ export default {
     },
     client_url: process.env.CLIENT_URL,
     node_mailer: {
-        host: process.env.NODE_MAILER_HOST,
-        port: process.env.NODE_MAILER_PORT,
         email: process.env.NODE_MAILER_EMAIL,
-        user: process.env.NODE_MAILER_USER,
         password: process.env.NODE_MAILER_PASSWORD,
     },
     cloudinary: {

@@ -14,15 +14,10 @@ const sendEmail = async (
 ) => {
     try {
         const transporter = nodemailer.createTransport({
-            host: config.node_mailer.host,
-            port: parseInt(config.node_mailer.port as string),
-            secure: config.NODE_ENV === 'production',
+            service: 'gmail',
             auth: {
-                user: config.node_mailer.user,
+                user: config.node_mailer.email,
                 pass: config.node_mailer.password,
-            },
-            tls: {
-                rejectUnauthorized: false,
             },
         });
 

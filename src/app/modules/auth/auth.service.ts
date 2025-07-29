@@ -160,7 +160,14 @@ const forgotPassword = async (email: string) => {
         </div>
         `;
 
-    await sendEmail(user.email, subject, htmlBody);
+    try {
+        await sendEmail(user.email, subject, htmlBody);
+    } catch {
+        throw new ApiError(
+            status.INTERNAL_SERVER_ERROR,
+            'Failed to send password reset email',
+        );
+    }
 
     return null;
 };
