@@ -426,6 +426,43 @@ const getAppointmentsBefore30Minutes = async () => {
     }
 };
 
+const verifyVideoCall = async (
+    videoCallingId: string,
+    decodedUser: TDecodedUser,
+) => {
+    const andConditions: Prisma.AppointmentWhereInput[] = [];
+
+    andConditions.push({
+        videoCallingId,
+        status: {
+            in: ['SCHEDULED', 'IN_PROGRESS'],
+        },
+    });
+
+    // user based filter
+    if (decodedUser.role === 'PATIENT') {
+        andConditions.push({
+            patient: {
+                email: decodedUser.email,
+            },
+        });
+    } else if (decodedUser.role === 'DOCTOR') {
+        andConditions.push({
+            doctor: {
+                email: decodedUser.email,
+            },
+        });
+    }
+
+    const whereCondition: Prisma.AppointmentWhereInput = { AND: andConditions };
+
+    const result = await prisma.appointment.findFirstOrThrow({
+        where: whereCondition,
+    });
+
+    return result;
+};
+
 export const AppointmentServices = {
     createAppointment,
     getMyAppointments,
@@ -433,4 +470,5 @@ export const AppointmentServices = {
     changeAppointmentStatus,
     cancelUnpaidAppointments,
     getAppointmentsBefore30Minutes,
+    verifyVideoCall,
 };

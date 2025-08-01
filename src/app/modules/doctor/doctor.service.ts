@@ -22,7 +22,7 @@ const getAllDoctorsFromDB = async (
                 some: {
                     specialties: {
                         title: {
-                            contains: specialties,
+                            equals: specialties,
                             mode: 'insensitive',
                         },
                     },

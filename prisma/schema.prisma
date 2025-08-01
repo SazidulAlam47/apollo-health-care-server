@@ -210,7 +210,7 @@ model Appointment {
   doctor          Doctor            @relation(fields: [doctorId], references: [id])
   scheduleId      String
   schedule        Schedule          @relation(fields: [scheduleId], references: [id])
-  videoCallingId  String
+  videoCallingId  String            @unique
   status          AppointmentStatus @default(SCHEDULED)
   paymentStatus   PaymentStatus     @default(UNPAID)
   reminderSent    Boolean           @default(false)

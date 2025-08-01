@@ -169,11 +169,33 @@ const getAllDoctorSchedule = async (
         startDateTime?: string;
         endDateTime?: string;
         isBooked?: string;
+        doctorId?: string;
     },
     query: TQueryParams,
 ) => {
-    const { page, limit, skip } = calculateOptions(query);
+    // pagination
+    let page: number;
+    let limit: number | undefined;
+    let skip: number;
+
+    if (query.page && query.limit) {
+        page = Number(query.page);
+        limit = Number(query.limit);
+        skip = (page - 1) * limit;
+    } else {
+        page = 1;
+        limit = undefined;
+        skip = 0;
+    }
+
     const andConditions: Prisma.DoctorSchedulesWhereInput[] = [];
+
+    // filter with doctorId
+    if (filterData.doctorId) {
+        andConditions.push({
+            doctorId: filterData.doctorId,
+        });
+    }
 
     // filter with range
     if (filterData.startDateTime && filterData.endDateTime) {
@@ -226,9 +248,13 @@ const getAllDoctorSchedule = async (
     const totalData = await prisma.doctorSchedules.count({
         where: whereCondition,
     });
-    const totalPage = Math.ceil(totalData / limit);
+    const totalPage = limit ? Math.ceil(totalData / limit) : 1;
+    const LimitResponse: number | 'Infinity' = limit || 'Infinity';
 
-    return { data: result, meta: { page, limit, totalData, totalPage } };
+    return {
+        data: result,
+        meta: { page, limit: LimitResponse, totalData, totalPage },
+    };
 };
 
 export const DoctorScheduleServices = {

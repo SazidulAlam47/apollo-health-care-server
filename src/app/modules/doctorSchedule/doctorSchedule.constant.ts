@@ -5,3 +5,10 @@ export const myScheduleFilters: TDoctorScheduleFilterKeys[] = [
     'startDateTime',
     'endDateTime',
 ];
+
+export const allScheduleFilters: TDoctorScheduleFilterKeys[] = [
+    'isBooked',
+    'startDateTime',
+    'endDateTime',
+    'doctorId',
+];

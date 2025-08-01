@@ -19617,13 +19617,13 @@ export namespace Prisma {
 
   export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    videoCallingId?: string
     AND?: AppointmentWhereInput | AppointmentWhereInput[]
     OR?: AppointmentWhereInput[]
     NOT?: AppointmentWhereInput | AppointmentWhereInput[]
     patientId?: StringFilter<"Appointment"> | string
     doctorId?: StringFilter<"Appointment"> | string
     scheduleId?: StringFilter<"Appointment"> | string
-    videoCallingId?: StringFilter<"Appointment"> | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
     paymentStatus?: EnumPaymentStatusFilter<"Appointment"> | $Enums.PaymentStatus
     reminderSent?: BoolFilter<"Appointment"> | boolean
@@ -19636,7 +19636,7 @@ export namespace Prisma {
     payment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
     prescription?: XOR<PrescriptionNullableScalarRelationFilter, PrescriptionWhereInput> | null
     review?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
-  }, "id">
+  }, "id" | "videoCallingId">
 
   export type AppointmentOrderByWithAggregationInput = {
     id?: SortOrder

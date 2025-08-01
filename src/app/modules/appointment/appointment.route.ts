@@ -18,6 +18,12 @@ router.get(
     AppointmentControllers.getMyAppointments,
 );
 
+router.get(
+    '/video-call/:id',
+    auth('DOCTOR', 'PATIENT'),
+    AppointmentControllers.verifyVideoCall,
+);
+
 router.post(
     '/',
     auth('PATIENT'),

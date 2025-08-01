@@ -5,7 +5,10 @@ import { DoctorScheduleServices } from './doctorSchedule.service';
 import { CustomRequest } from '../../interfaces';
 import pick from '../../utils/pick';
 import { queryFilters } from '../../constants';
-import { myScheduleFilters } from './doctorSchedule.constant';
+import {
+    allScheduleFilters,
+    myScheduleFilters,
+} from './doctorSchedule.constant';
 
 const createDoctorSchedule = catchAsync(async (req, res) => {
     const { user } = req as CustomRequest;
@@ -49,7 +52,7 @@ const deleteMySchedule = catchAsync(async (req, res) => {
 });
 
 const getAllDoctorSchedule = catchAsync(async (req, res) => {
-    const filters = pick(req.query, myScheduleFilters);
+    const filters = pick(req.query, allScheduleFilters);
     const query = pick(req.query, queryFilters);
     const result = await DoctorScheduleServices.getAllDoctorSchedule(
         filters,
