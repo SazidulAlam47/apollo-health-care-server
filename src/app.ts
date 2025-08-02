@@ -11,7 +11,14 @@ const app: Application = express();
 
 // parsers
 app.use(express.json());
-app.use(cors({ origin: [config.client_url as string], credentials: true }));
+app.use(
+    cors({
+        origin: [config.client_url as string],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    }),
+);
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 

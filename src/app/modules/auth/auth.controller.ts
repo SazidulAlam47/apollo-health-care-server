@@ -13,7 +13,7 @@ const loginUser = catchAsync(async (req, res) => {
     res.cookie('refreshToken', refreshToken, {
         secure: config.NODE_ENV === 'production',
         httpOnly: true,
-        sameSite: config.NODE_ENV === 'production' ? 'lax' : 'strict',
+        sameSite: config.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge: 1000 * 60 * 60 * 24 * 365,
         path: '/',
     });
@@ -30,7 +30,12 @@ const loginUser = catchAsync(async (req, res) => {
 });
 
 const logoutUser = catchAsync(async (req, res) => {
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', {
+        secure: config.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: config.NODE_ENV === 'production' ? 'none' : 'strict',
+        path: '/',
+    });
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Logged out successfully',
