@@ -21,9 +21,21 @@ const getDashboardMetaData = async (decodedUser: TDecodedUser) => {
 };
 
 const getSuperAdminMetaData = async () => {
-    const doctorCount = await prisma.doctor.count();
-    const patientCount = await prisma.patient.count();
-    const adminCount = await prisma.admin.count();
+    const doctorCount = await prisma.doctor.count({
+        where: {
+            isDeleted: false,
+        },
+    });
+    const patientCount = await prisma.patient.count({
+        where: {
+            isDeleted: false,
+        },
+    });
+    const adminCount = await prisma.admin.count({
+        where: {
+            isDeleted: false,
+        },
+    });
 
     const appointmentCount = await prisma.appointment.count({
         where: {
@@ -63,8 +75,16 @@ const getSuperAdminMetaData = async () => {
 };
 
 const getAdminMetaData = async () => {
-    const doctorCount = await prisma.doctor.count();
-    const patientCount = await prisma.patient.count();
+    const doctorCount = await prisma.doctor.count({
+        where: {
+            isDeleted: false,
+        },
+    });
+    const patientCount = await prisma.patient.count({
+        where: {
+            isDeleted: false,
+        },
+    });
     const appointmentCount = await prisma.appointment.count({
         where: {
             status: {
