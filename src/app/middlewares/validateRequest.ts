@@ -1,11 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { AnyZodObject, ZodEffects } from 'zod';
+import { AnyZodObject, ZodEffects, ZodTypeAny } from 'zod';
 import catchAsync from '../utils/catchAsync';
 
-type ZodSchema =
-    | AnyZodObject
-    | ZodEffects<AnyZodObject>
-    | ZodEffects<ZodEffects<AnyZodObject>>;
+type ZodSchema = AnyZodObject | ZodEffects<ZodTypeAny>;
 
 const validateRequest = (schema: ZodSchema) => {
     return catchAsync(
