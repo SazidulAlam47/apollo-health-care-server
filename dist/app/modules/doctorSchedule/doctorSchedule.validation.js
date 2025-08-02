@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DoctorScheduleValidations = void 0;
+const zod_1 = require("zod");
+const createDoctorSchedule = zod_1.z.object({
+    scheduleIds: zod_1.z.string().array(),
+});
+exports.DoctorScheduleValidations = {
+    createDoctorSchedule,
+};

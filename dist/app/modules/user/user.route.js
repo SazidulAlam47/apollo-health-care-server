@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const user_controller_1 = require("./user.controller");
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const user_validation_1 = require("./user.validation");
+const sendImageToCloudinary_1 = require("../../utils/sendImageToCloudinary");
+const validateRequestWithFileCleanup_1 = __importDefault(require("../../middlewares/validateRequestWithFileCleanup"));
+const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const router = express_1.default.Router();
+router.get('/', (0, auth_1.default)('ADMIN', 'SUPER_ADMIN'), user_controller_1.UserControllers.getAllUsers);
+router.get('/me', (0, auth_1.default)(), user_controller_1.UserControllers.getMyProfile);
+router.post('/create-admin', (0, auth_1.default)('SUPER_ADMIN'), sendImageToCloudinary_1.upload.single('file'), (0, validateRequestWithFileCleanup_1.default)(user_validation_1.UserValidations.createAdmin), user_controller_1.UserControllers.createAdmin);
+router.post('/create-doctor', (0, auth_1.default)('ADMIN', 'SUPER_ADMIN'), sendImageToCloudinary_1.upload.single('file'), (0, validateRequestWithFileCleanup_1.default)(user_validation_1.UserValidations.createDoctor), user_controller_1.UserControllers.createDoctor);
+router.post('/create-patient', sendImageToCloudinary_1.upload.single('file'), (0, validateRequestWithFileCleanup_1.default)(user_validation_1.UserValidations.createPatient), user_controller_1.UserControllers.createPatient);
+router.patch('/:id/status', (0, auth_1.default)('ADMIN', 'SUPER_ADMIN'), (0, validateRequest_1.default)(user_validation_1.UserValidations.changeProfileStatus), user_controller_1.UserControllers.changeProfileStatus);
+router.patch('/update-my-profile', (0, auth_1.default)('ADMIN', 'DOCTOR', 'PATIENT'), sendImageToCloudinary_1.upload.single('file'), (0, validateRequestWithFileCleanup_1.default)(user_validation_1.UserValidations.updateMyProfile), user_controller_1.UserControllers.updateMyProfile);
+exports.UserRoutes = router;
