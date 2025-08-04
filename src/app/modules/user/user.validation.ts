@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { Gender, UserStatus } from '../../../../generated/prisma';
+import {
+    BloodGroup,
+    Gender,
+    MaritalStatus,
+    UserStatus,
+} from '../../../../generated/prisma';
 import { newPasswordSchema } from '../auth/auth.validation';
 
 const createAdmin = z.object({
@@ -70,6 +75,32 @@ const updateMyProfile = z.object({
                 isDeleted: z.boolean(),
             }),
         )
+        .optional(),
+    patientHealthData: z
+        .object({
+            dateOfBirth: z.string().datetime().optional(),
+            gender: z.nativeEnum(Gender).optional(),
+            bloodGroup: z.nativeEnum(BloodGroup).optional(),
+            hasAllergies: z.boolean().optional(),
+            hasDiabetes: z.boolean().optional(),
+            height: z.string().optional(),
+            weight: z.string().optional(),
+            smokingStatus: z.boolean().optional(),
+            dietaryPreferences: z.string().optional(),
+            pregnancyStatus: z.boolean().optional(),
+            mentalHealthHistory: z.string().optional(),
+            immunizationStatus: z.string().optional(),
+            hasPastSurgeries: z.boolean().optional(),
+            recentAnxiety: z.boolean().optional(),
+            recentDepression: z.boolean().optional(),
+            maritalStatus: z.nativeEnum(MaritalStatus).optional(),
+        })
+        .optional(),
+    medicalReport: z
+        .object({
+            reportName: z.string(),
+            reportLink: z.string().url(),
+        })
         .optional(),
 });
 

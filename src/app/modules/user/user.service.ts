@@ -291,7 +291,12 @@ const getMyProfileFromDB = async (userData: TDecodedUser) => {
                     },
                 },
             },
-            patient: userData.role === 'PATIENT',
+            patient: userData.role === 'PATIENT' && {
+                include: {
+                    patientHealthData: true,
+                    medicalReport: true,
+                },
+            },
         },
     });
 
@@ -337,15 +342,59 @@ const updateMyProfileIntoDB = async (
             'contactNumber',
             'address',
             'profilePhoto',
+            'patientHealthData',
+            'medicalReport',
         ]);
-        result = await prisma.patient.update({
+        const { patientHealthData, medicalReport, ...patientData } =
+            patientUpdate;
+
+        const patient = await prisma.patient.findUniqueOrThrow({
             where: { email: user.email },
-            data: patientUpdate,
+            select: { id: true },
+        });
+
+        result = await prisma.$transaction(async (tx) => {
+            // create or update health data
+            if (patientHealthData) {
+                await tx.patientHealthData.upsert({
+                    where: { patientId: patient.id },
+                    update: patientHealthData,
+                    create: { ...patientHealthData, patientId: patient.id },
+                });
+            }
+            //add medical report
+            if (medicalReport) {
+                await tx.medicalReport.create({
+                    data: { ...medicalReport, patientId: patient.id },
+                });
+            }
+
+            // update patient table
+            return await tx.patient.update({
+                where: { id: patient.id },
+                data: patientData,
+                include: {
+                    patientHealthData: true,
+                    medicalReport: true,
+                },
+            });
         });
     }
 
     if (user.role == 'DOCTOR') {
-        const { specialties, ...doctorData } = payload;
+        const doctorUpdate = pick(payload, [
+            'name',
+            'contactNumber',
+            'address',
+            'registrationNumber',
+            'experience',
+            'appointmentFee',
+            'qualification',
+            'currentWorkingPlace',
+            'designation',
+            'specialties',
+        ]);
+        const { specialties, ...doctorData } = doctorUpdate;
 
         const doctor = await prisma.doctor.findUniqueOrThrow({
             where: { email: user.email, isDeleted: false },
@@ -397,7 +446,7 @@ const updateMyProfileIntoDB = async (
                 }
             }
 
-            const updatedDoctor = await tx.doctor.update({
+            return await tx.doctor.update({
                 where: { id: doctor.id },
                 data: doctorData,
                 include: {
@@ -408,8 +457,6 @@ const updateMyProfileIntoDB = async (
                     },
                 },
             });
-
-            return updatedDoctor;
         });
     }
 
