@@ -35,7 +35,7 @@ const getAllSchedules = catchAsync(async (req, res) => {
 
 const getScheduleById = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const result = await ScheduleServices.getScheduleByIdFromDB(id);
+    const result = await ScheduleServices.getScheduleByIdFromDB(id as string);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Schedule created successfully',
@@ -45,7 +45,7 @@ const getScheduleById = catchAsync(async (req, res) => {
 
 const deleteScheduleById = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const result = await ScheduleServices.deleteScheduleByIdFromDB(id);
+    const result = await ScheduleServices.deleteScheduleByIdFromDB(id as string);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Schedule deleted successfully',

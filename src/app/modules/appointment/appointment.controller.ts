@@ -51,7 +51,7 @@ const changeAppointmentStatus = catchAsync(async (req, res) => {
     const { status: appointmentStatus } = req.body;
     const { user } = req as CustomRequest;
     const result = await AppointmentServices.changeAppointmentStatus(
-        id,
+        id as string,
         appointmentStatus,
         user,
     );
@@ -65,7 +65,7 @@ const changeAppointmentStatus = catchAsync(async (req, res) => {
 const verifyVideoCall = catchAsync(async (req, res) => {
     const { id } = req.params;
     const { user } = req as CustomRequest;
-    const result = await AppointmentServices.verifyVideoCall(id, user);
+    const result = await AppointmentServices.verifyVideoCall(id as string, user);
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Appointment verified successfully',
