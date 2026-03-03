@@ -43,7 +43,10 @@ const getMySchedules = catchAsync(async (req, res) => {
 const deleteMySchedule = catchAsync(async (req, res) => {
     const { user } = req as CustomRequest;
     const { id } = req.params;
-    const result = await DoctorScheduleServices.deleteMySchedule(id as string, user);
+    const result = await DoctorScheduleServices.deleteMySchedule(
+        id as string,
+        user,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'My Schedule deleted successfully',

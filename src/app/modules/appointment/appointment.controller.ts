@@ -65,7 +65,10 @@ const changeAppointmentStatus = catchAsync(async (req, res) => {
 const verifyVideoCall = catchAsync(async (req, res) => {
     const { id } = req.params;
     const { user } = req as CustomRequest;
-    const result = await AppointmentServices.verifyVideoCall(id as string, user);
+    const result = await AppointmentServices.verifyVideoCall(
+        id as string,
+        user,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Appointment verified successfully',

@@ -19,7 +19,9 @@ const getAllDoctors = catchAsync(async (req, res) => {
 });
 
 const getDoctorById = catchAsync(async (req, res) => {
-    const result = await DoctorServices.getDoctorByIdFromDB(req.params.id as string);
+    const result = await DoctorServices.getDoctorByIdFromDB(
+        req.params.id as string,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Doctor is fetched successfully',
@@ -28,7 +30,9 @@ const getDoctorById = catchAsync(async (req, res) => {
 });
 
 const deleteDoctorById = catchAsync(async (req, res) => {
-    const result = await DoctorServices.deleteDoctorByIdFromDB(req.params.id as string);
+    const result = await DoctorServices.deleteDoctorByIdFromDB(
+        req.params.id as string,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Doctor is deleted successfully',

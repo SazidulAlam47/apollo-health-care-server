@@ -19,7 +19,9 @@ const getAllPatients = catchAsync(async (req, res) => {
 });
 
 const getPatientById = catchAsync(async (req, res) => {
-    const result = await PatientServices.getPatientByIdFromDB(req.params.id as string);
+    const result = await PatientServices.getPatientByIdFromDB(
+        req.params.id as string,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Patient is fetched successfully',
@@ -28,7 +30,9 @@ const getPatientById = catchAsync(async (req, res) => {
 });
 
 const deletePatientById = catchAsync(async (req, res) => {
-    const result = await PatientServices.deletePatientByIdFromDB(req.params.id as string);
+    const result = await PatientServices.deletePatientByIdFromDB(
+        req.params.id as string,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Patient is deleted successfully',

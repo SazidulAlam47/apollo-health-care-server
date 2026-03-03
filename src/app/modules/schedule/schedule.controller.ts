@@ -45,7 +45,9 @@ const getScheduleById = catchAsync(async (req, res) => {
 
 const deleteScheduleById = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const result = await ScheduleServices.deleteScheduleByIdFromDB(id as string);
+    const result = await ScheduleServices.deleteScheduleByIdFromDB(
+        id as string,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Schedule deleted successfully',

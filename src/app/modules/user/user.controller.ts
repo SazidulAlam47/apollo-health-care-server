@@ -49,7 +49,10 @@ const getAllUsers = catchAsync(async (req, res) => {
 const changeProfileStatus = catchAsync(async (req, res) => {
     const { id } = req.params;
     const { status: userStatus } = req.body;
-    const result = await UserServices.changeProfileStatusIntoDB(id as string, userStatus);
+    const result = await UserServices.changeProfileStatusIntoDB(
+        id as string,
+        userStatus,
+    );
     sendResponse(res, {
         statusCode: status.OK,
         message: 'Status updated Successfully',
